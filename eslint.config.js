@@ -24,4 +24,10 @@ export default [
 			'no-console': 'error',
 		},
 	},
+	{
+		files: ['scripts/**/*.ts'],
+		rules: {
+			'no-console': 'off',
+		},
+	},
 ];

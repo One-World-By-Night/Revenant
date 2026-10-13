@@ -1,11 +1,12 @@
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { Client, GatewayIntentBits } from 'discord.js';
+import { Client, GatewayIntentBits, Events } from 'discord.js';
 import { loadConfig } from './config.js';
 import { createLogger } from './log.js';
 import { createPool } from './db/pool.js';
 import { runMigrations } from './db/migrate.js';
 import { startHealthServer } from './health.js';
+import { findCommand, type CommandContext } from './commands/registry.js';
 
 const config = loadConfig();
 const logger = createLogger(config.logLevel);
@@ -26,6 +27,25 @@ client.once('ready', (readyClient) => {
 
 client.on('error', (error) => {
 	logger.error({ error: error.message }, 'Discord client error');
+});
+
+const commandContext: CommandContext = { pool, logger, config };
+
+client.on(Events.InteractionCreate, (interaction) => {
+	if (!interaction.isChatInputCommand()) {
+		return;
+	}
+	const command = findCommand(interaction.commandName);
+	if (!command) {
+		logger.warn({ commandName: interaction.commandName }, 'received an interaction for an unknown command');
+		return;
+	}
+	command.execute(interaction, commandContext).catch((error: unknown) => {
+		logger.error(
+			{ commandName: interaction.commandName, error: error instanceof Error ? error.message : String(error) },
+			'command execution failed'
+		);
+	});
 });
 
 startHealthServer({ discordReady: () => client.isReady(), pool }, config.healthPort);
