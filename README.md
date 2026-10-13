@@ -14,6 +14,16 @@ Beyond Elysium keeps a chronicle's sheets, approvals and downtime on its WordPre
 
 Anything a Storyteller keeps private stays out of the channel.
 
+## Commit checks
+
+Run this once in a new clone:
+
+```
+git config core.hooksPath .githooks
+```
+
+The hooks refuse a commit whose message, files or file names credit a code-generation tool. The same check runs on GitHub for every push and pull request.
+
 ## License
 
 GPL-2.0, the same as Beyond Elysium. See [LICENSE](LICENSE).

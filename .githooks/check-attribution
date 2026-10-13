@@ -1,0 +1,81 @@
+#!/bin/sh
+# Refuses commit messages, commit identities, pull request text, file contents and file names
+# that credit a code-generation tool.
+#
+#   check-attribution message <file>   one commit message (commit-msg hook)
+#   check-attribution staged           everything staged for commit (pre-commit hook)
+#   check-attribution all              tracked files, every commit, and PR_TITLE / PR_BODY (CI)
+#
+# The patterns are stored rot13-encoded and decoded at run time.
+
+set -u
+
+rot() { printf '%s' "$1" | tr 'A-Za-z' 'N-ZA-Mn-za-m'; }
+
+B='(^|[^[:alnum:]_])'
+E='([^[:alnum:]_]|$)'
+NAMES=$(rot 'pynhqr|naguebcvp|bcranv|pungtcg|pbcvybg')
+MSG_RE="$B($NAMES|$(rot 'tcg(-?[0-9][0-9n-m.]*)?|yyzf?|nv'))$E|$(rot 'pb-nhguberq-ol|abercyl@naguebcvp')"
+FILE_RE="$B($NAMES)$E|$(rot 'pb-nhguberq-ol|abercyl@naguebcvp|(trarengrq|jevggra|nhguberq|perngrq|ohvyg|cebqhprq) (ol|jvgu|hfvat) (na? )?(nv|yyz|phefbe)|nv[- ]trarengrq|(uryc|nffvfgnapr) bs (na? )?(nv|yyz)')"
+ROBOT=$(printf '\360\237\244\226')
+
+failed=0
+
+# Prints and records any line of the text that matches the pattern or the robot emoji.
+scan() {
+	label=$1
+	pattern=$2
+	text=$3
+	hits=$( {
+		printf '%s\n' "$text" | grep -n -i -E -e "$pattern"
+		printf '%s\n' "$text" | grep -n -F -e "$ROBOT"
+	} | sort -u -n | head -10 )
+	if [ -n "$hits" ]; then
+		printf 'attribution check: %s\n' "$label" >&2
+		printf '%s\n' "$hits" | sed 's/^/    /' >&2
+		failed=1
+	fi
+}
+
+# Prints and records tracked or staged file contents that match, through git grep.
+grep_files() {
+	label=$1
+	shift
+	hits=$( {
+		git grep -I -n -i -E "$@" -e "$FILE_RE"
+		git grep -I -n -F "$@" -e "$ROBOT"
+	} | head -10 )
+	if [ -n "$hits" ]; then
+		printf 'attribution check: %s\n' "$label" >&2
+		printf '%s\n' "$hits" | sed 's/^/    /' >&2
+		failed=1
+	fi
+}
+
+mode=${1:-}
+
+case "$mode" in
+	message)
+		scan 'commit message' "$MSG_RE" "$(sed '/^# -\{24\} >8 -\{24\}$/,$d' "${2:?message file}" | grep -v '^#')"
+		;;
+	staged)
+		scan 'file name' "$FILE_RE" "$(git diff --cached --name-only --diff-filter=ACMR)"
+		grep_files 'staged file contents' --cached
+		;;
+	all)
+		scan 'file name' "$FILE_RE" "$(git ls-files)"
+		grep_files 'file contents'
+		scan 'commit author or committer' "$MSG_RE" "$(git log --all --format='%an <%ae>%n%cn <%ce>')"
+		scan 'commit message' "$MSG_RE" "$(git log --all --format='%B')"
+		scan 'pull request text' "$MSG_RE" "$(printf '%s\n%s\n' "${PR_TITLE:-}" "${PR_BODY:-}")"
+		;;
+	*)
+		printf 'usage: check-attribution message <file> | staged | all\n' >&2
+		exit 2
+		;;
+esac
+
+if [ "$failed" -ne 0 ]; then
+	printf 'Remove the credit to a code-generation tool and try again.\n' >&2
+fi
+exit "$failed"
