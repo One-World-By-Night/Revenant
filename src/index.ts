@@ -32,6 +32,20 @@ client.on('error', (error) => {
 const commandContext: CommandContext = { pool, logger, config };
 
 client.on(Events.InteractionCreate, (interaction) => {
+	if (interaction.isAutocomplete()) {
+		const command = findCommand(interaction.commandName);
+		if (!command?.autocomplete) {
+			return;
+		}
+		command.autocomplete(interaction, commandContext).catch((error: unknown) => {
+			logger.error(
+				{ commandName: interaction.commandName, error: error instanceof Error ? error.message : String(error) },
+				'autocomplete failed'
+			);
+		});
+		return;
+	}
+
 	if (!interaction.isChatInputCommand()) {
 		return;
 	}

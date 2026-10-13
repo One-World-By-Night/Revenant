@@ -37,5 +37,18 @@
 	"links.revokeButton": "Revogar",
 	"links.approved": "Aprovado.",
 	"links.declined": "Recusado.",
-	"links.revoked": "Revogado."
+	"links.revoked": "Revogado.",
+	"character.invalidSelection": "Esse não é mais um dos seus personagens vinculados. Tente de novo.",
+	"character.setActive": "Agora você está jogando como **{name}**.",
+	"character.noneActive": "Você não tem um personagem ativo. Rode `/character <nome>` para escolher um.",
+	"character.activeCleared": "Seu personagem ativo não está mais vinculado a você, então foi removido. Rode `/character <nome>` para escolher outro.",
+	"character.active": "Você está jogando como **{name}**.",
+	"sheet.noCharacter": "Você não tem um personagem ativo. Rode `/character <nome>` primeiro, ou indique um aqui.",
+	"sheet.forbidden": "Você só pode ver seus próprios personagens.",
+	"sheet.characterNotFound": "Esse personagem não foi encontrado nesta crônica.",
+	"sheet.sectionNotFound": "Essa seção não foi encontrada nesta ficha.",
+	"sheet.publicOwnOnly": "Você só pode publicar a ficha de um personagem quando é o seu próprio.",
+	"sheet.postedPublicly": "Publicado no canal.",
+	"sheet.previousButton": "Anterior",
+	"sheet.nextButton": "Próximo"
 }

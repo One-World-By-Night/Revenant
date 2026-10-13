@@ -1,0 +1,288 @@
+{
+    "title": "Ezra Stormcrow",
+    "subtitle": "Werewolf",
+    "header": [
+        [
+            "Printed",
+            "2026-10-13"
+        ],
+        [
+            "Last modified",
+            "2026-10-08"
+        ],
+        [
+            "Status",
+            "Active"
+        ],
+        [
+            "XP Earned",
+            "80"
+        ],
+        [
+            "XP Unspent",
+            "10"
+        ],
+        [
+            "Tribe",
+            "Silver Fangs"
+        ],
+        [
+            "Breed",
+            "Homid"
+        ],
+        [
+            "Auspice",
+            "Philodox"
+        ],
+        [
+            "Rank",
+            "2"
+        ],
+        [
+            "Pack",
+            "The Ember Circle"
+        ],
+        [
+            "Totem",
+            "Falcon"
+        ],
+        [
+            "Honor",
+            "x4",
+            4
+        ],
+        [
+            "Glory",
+            "x2",
+            2
+        ],
+        [
+            "Wisdom",
+            "x5",
+            5
+        ],
+        [
+            "Rage",
+            "x5",
+            5
+        ],
+        [
+            "Gnosis",
+            "x3",
+            3
+        ],
+        [
+            "Willpower",
+            "x6",
+            6
+        ],
+        [
+            "Nature",
+            "Judge"
+        ],
+        [
+            "Demeanor",
+            "Leader"
+        ]
+    ],
+    "portrait_path": null,
+    "style": {
+        "font_family": null,
+        "accent_color": null,
+        "background_color": null,
+        "text_color": null,
+        "background_image_path": null,
+        "section_graphics": []
+    },
+    "sections": [
+        {
+            "block_slug": "met-physical-traits",
+            "section_type": "trait_list",
+            "title": "Physical Traits · 2",
+            "column": 1,
+            "order": 6,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Enduring x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-social-traits",
+            "section_type": "trait_list",
+            "title": "Social Traits · 3",
+            "column": 1,
+            "order": 7,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Commanding x3",
+                            "indent": 0,
+                            "circles": 3
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-mental-traits",
+            "section_type": "trait_list",
+            "title": "Mental Traits · 5",
+            "column": 1,
+            "order": 8,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Disciplined x3",
+                            "indent": 0,
+                            "circles": 3
+                        },
+                        {
+                            "text": "Wise x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "werewolf-abilities",
+            "section_type": "trait_list",
+            "title": "Werewolf Abilities · 8",
+            "column": 1,
+            "order": 12,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Brawl x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Leadership x3",
+                            "indent": 0,
+                            "circles": 3
+                        },
+                        {
+                            "text": "Occult",
+                            "indent": 0,
+                            "circles": 1
+                        },
+                        {
+                            "text": "Politics x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "werewolf-backgrounds",
+            "section_type": "trait_list",
+            "title": "Werewolf Backgrounds · 2",
+            "column": 1,
+            "order": 13,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Ancestors x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "werewolf-gifts",
+            "section_type": "tiered_power",
+            "title": "Werewolf Gifts",
+            "column": 1,
+            "order": 14,
+            "span": 6,
+            "rows": [
+                "Silver Fangs: Falcon's Grasp (basic)",
+                "Philodox: King of the Beasts (basic)"
+            ]
+        },
+        {
+            "block_slug": "werewolf-rites",
+            "section_type": "trait_list",
+            "title": "Werewolf Rites",
+            "column": 1,
+            "order": 15,
+            "span": 6,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Rite of Passage"
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "werewolf-merits",
+            "section_type": "trait_list",
+            "title": "Werewolf Merits",
+            "column": 1,
+            "order": 16,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Natural Leader 1"
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "werewolf-flaws",
+            "section_type": "trait_list",
+            "title": "Werewolf Flaws",
+            "column": 1,
+            "order": 17,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Overconfident 1"
+                    ]
+                }
+            ]
+        }
+    ],
+    "prose": [],
+    "xp_history": [],
+    "provenance_lines": [
+        "01a11da7-7be1-7ca8-9f43-230024302d13",
+        "be-demo · 2026-10-13 · Beyond Elysium 1.6.0"
+    ]
+}

@@ -1,0 +1,227 @@
+{
+    "title": "Marcus Chen",
+    "subtitle": "Hunter",
+    "header": [
+        [
+            "Printed",
+            "2026-10-13"
+        ],
+        [
+            "Last modified",
+            "2026-10-08"
+        ],
+        [
+            "Status",
+            "Active"
+        ],
+        [
+            "Player",
+            "Stock Sheet"
+        ],
+        [
+            "XP Earned",
+            "20"
+        ],
+        [
+            "XP Unspent",
+            "4"
+        ],
+        [
+            "Creed",
+            "Innocence"
+        ],
+        [
+            "Handle",
+            "chemist105"
+        ],
+        [
+            "Nature",
+            "Penitent"
+        ],
+        [
+            "Demeanor",
+            "Caregiver"
+        ],
+        [
+            "Willpower",
+            "x3",
+            3
+        ],
+        [
+            "Conviction",
+            "x3",
+            3
+        ],
+        [
+            "Mercy",
+            "x2",
+            2
+        ],
+        [
+            "Vision",
+            "x1",
+            1
+        ],
+        [
+            "Zeal",
+            "x0",
+            0
+        ]
+    ],
+    "portrait_path": null,
+    "style": {
+        "font_family": null,
+        "accent_color": null,
+        "background_color": null,
+        "text_color": null,
+        "background_image_path": null,
+        "section_graphics": []
+    },
+    "sections": [
+        {
+            "block_slug": "met-physical-traits",
+            "section_type": "trait_list",
+            "title": "Physical Traits · 1",
+            "column": 1,
+            "order": 6,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Quick",
+                            "indent": 0,
+                            "circles": 1
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-social-traits",
+            "section_type": "trait_list",
+            "title": "Social Traits · 3",
+            "column": 1,
+            "order": 7,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Empathetic",
+                            "indent": 0,
+                            "circles": 1
+                        },
+                        {
+                            "text": "Friendly x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-mental-traits",
+            "section_type": "trait_list",
+            "title": "Mental Traits · 3",
+            "column": 1,
+            "order": 8,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Intuitive",
+                            "indent": 0,
+                            "circles": 1
+                        },
+                        {
+                            "text": "Observant x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "hunter-abilities",
+            "section_type": "trait_list",
+            "title": "Hunter Abilities · 5",
+            "column": 1,
+            "order": 12,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Academics x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Empathy x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Medicine",
+                            "indent": 0,
+                            "circles": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "hunter-backgrounds",
+            "section_type": "trait_list",
+            "title": "Hunter Backgrounds · 3",
+            "column": 1,
+            "order": 13,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Allies x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Contacts",
+                            "indent": 0,
+                            "circles": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "hunter-edges",
+            "section_type": "tiered_power",
+            "title": "Hunter Edges",
+            "column": 1,
+            "order": 14,
+            "span": 6,
+            "rows": [
+                "Innocence Path: Hide (touched)"
+            ]
+        }
+    ],
+    "prose": [],
+    "xp_history": [],
+    "provenance_lines": [
+        "01a11da7-7c00-7bbb-9d13-7957b8dd7d20",
+        "be-demo · 2026-10-13 · Beyond Elysium 1.6.0"
+    ]
+}

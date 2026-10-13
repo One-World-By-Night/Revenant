@@ -1,0 +1,253 @@
+{
+    "title": "Meridian",
+    "subtitle": "Demon",
+    "header": [
+        [
+            "Printed",
+            "2026-10-13"
+        ],
+        [
+            "Last modified",
+            "2026-10-08"
+        ],
+        [
+            "Status",
+            "Active"
+        ],
+        [
+            "Player",
+            "Stock Sheet"
+        ],
+        [
+            "XP Earned",
+            "65"
+        ],
+        [
+            "XP Unspent",
+            "8"
+        ],
+        [
+            "House",
+            "Devil"
+        ],
+        [
+            "Faction",
+            "Faustian"
+        ],
+        [
+            "Nature",
+            "Visionary"
+        ],
+        [
+            "Demeanor",
+            "Manipulator"
+        ],
+        [
+            "Faith",
+            "x4",
+            4
+        ],
+        [
+            "Torment",
+            "x3",
+            3
+        ],
+        [
+            "Willpower",
+            "x6",
+            6
+        ],
+        [
+            "Conscience",
+            "x1",
+            1
+        ],
+        [
+            "Conviction",
+            "x1",
+            1
+        ],
+        [
+            "Courage",
+            "x1",
+            1
+        ]
+    ],
+    "portrait_path": null,
+    "style": {
+        "font_family": null,
+        "accent_color": null,
+        "background_color": null,
+        "text_color": null,
+        "background_image_path": null,
+        "section_graphics": []
+    },
+    "sections": [
+        {
+            "block_slug": "met-physical-traits",
+            "section_type": "trait_list",
+            "title": "Physical Traits · 3",
+            "column": 1,
+            "order": 5,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Vigorous x3",
+                            "indent": 0,
+                            "circles": 3
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-social-traits",
+            "section_type": "trait_list",
+            "title": "Social Traits · 2",
+            "column": 1,
+            "order": 6,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Commanding x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-mental-traits",
+            "section_type": "trait_list",
+            "title": "Mental Traits · 3",
+            "column": 1,
+            "order": 7,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Insidious x3",
+                            "indent": 0,
+                            "circles": 3
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "demon-abilities",
+            "section_type": "trait_list",
+            "title": "Demon Abilities · 10",
+            "column": 1,
+            "order": 14,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Intimidation x3",
+                            "indent": 0,
+                            "circles": 3
+                        },
+                        {
+                            "text": "Lore: Vampire",
+                            "indent": 0,
+                            "circles": 1
+                        },
+                        {
+                            "text": "Lore: Werewolf",
+                            "indent": 0,
+                            "circles": 1
+                        },
+                        {
+                            "text": "Occult x3",
+                            "indent": 0,
+                            "circles": 3
+                        },
+                        {
+                            "text": "Politics x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "demon-backgrounds",
+            "section_type": "trait_list",
+            "title": "Demon Backgrounds · 3",
+            "column": 1,
+            "order": 15,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Followers",
+                            "indent": 0,
+                            "circles": 1
+                        },
+                        {
+                            "text": "Legacy x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "demon-merits",
+            "section_type": "trait_list",
+            "title": "Demon Merits",
+            "column": 1,
+            "order": 16,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Celestial Attunement 1"
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "demon-flaws",
+            "section_type": "trait_list",
+            "title": "Demon Flaws",
+            "column": 1,
+            "order": 17,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Dark Fate 5"
+                    ]
+                }
+            ]
+        }
+    ],
+    "prose": [],
+    "xp_history": [],
+    "provenance_lines": [
+        "01a11da7-7bec-705b-9cb8-22c300cd436c",
+        "be-demo · 2026-10-13 · Beyond Elysium 1.6.0"
+    ]
+}
