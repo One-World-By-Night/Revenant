@@ -1,0 +1,36 @@
+{
+  "name": "berevenant",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "register": "tsx scripts/register-commands.ts",
+    "backup": "bash scripts/backup.sh",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:be": "vitest run --config vitest.be.config.ts",
+    "check": "npm run typecheck && npm run lint && npm run test"
+  },
+  "dependencies": {
+    "discord.js": "14.27.0",
+    "pg": "8.13.1",
+    "pino": "9.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.9.0",
+    "@types/pg": "8.11.10",
+    "@typescript-eslint/eslint-plugin": "8.71.2",
+    "@typescript-eslint/parser": "8.71.2",
+    "eslint": "10.12.0",
+    "tsx": "4.23.15",
+    "typescript": "5.6.3",
+    "vitest": "2.1.9"
+  }
+}
