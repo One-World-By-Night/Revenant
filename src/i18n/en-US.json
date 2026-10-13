@@ -1,0 +1,18 @@
+{
+	"connect.alreadyConnectedLocally": "This server is already connected to a chronicle. Run `/disconnect` first.",
+	"connect.invalidCode": "That code didn't work. Codes last 15 minutes and work once; make a new one in Chronicle Setup.",
+	"connect.alreadyConnected": "That chronicle is already connected to a Discord server. Its HST can disconnect it in Chronicle Setup.",
+	"connect.tooOld": "That site doesn't run Beyond Elysium 1.6 or newer.",
+	"connect.unreachable": "Couldn't reach {site}.",
+	"connect.success": "Connected to *{gameName}*. Players can run `/link` now.",
+	"disconnect.notConnected": "This server isn't connected to a chronicle.",
+	"disconnect.confirmPrompt": "Disconnect this server from its chronicle?",
+	"disconnect.confirmButton": "Disconnect",
+	"disconnect.cancelButton": "Cancel",
+	"disconnect.cancelled": "Cancelled.",
+	"disconnect.success": "Disconnected.",
+	"disconnect.beUnreachableNote": "The site may still show this server connected; its HST can disconnect it in Chronicle Setup.",
+	"shared.connectionEndedFromSite": "This connection was ended from the chronicle's site.",
+	"shared.botDefect": "Something went wrong on the bot's own side. This has been logged.",
+	"shared.unreachable": "The chronicle's site didn't answer. Try again in a moment."
+}
