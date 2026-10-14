@@ -88,7 +88,10 @@ export const settingsCommand = {
 				.setName('pool_rules')
 				.setDescription('Which World of Darkness pool rules /roll uses')
 				.setDescriptionLocalizations({ 'pt-BR': 'Quais regras de reserva o /roll usa' })
-				.addChoices({ name: 'Revised', value: 'revised' }, { name: 'V20', value: 'v20' })
+				.addChoices(
+					{ name: 'Revised', value: 'revised' },
+					{ name: 'V20', value: 'v20' }
+				)
 		)
 		.addChannelOption((option) =>
 			option
@@ -103,9 +106,13 @@ export const settingsCommand = {
 				.setDescription("The server's language for public posts")
 				.setDescriptionLocalizations({ 'pt-BR': 'O idioma do servidor para publicações públicas' })
 				.addChoices(
-					{ name: 'English (US)', value: 'en-US' },
-					{ name: 'Portuguese (Brazil)', value: 'pt-BR' },
-					{ name: "Default (Discord's own server language)", value: 'default' }
+					{ name: 'English (US)', value: 'en-US', name_localizations: { 'pt-BR': 'Inglês (EUA)' } },
+					{ name: 'Portuguese (Brazil)', value: 'pt-BR', name_localizations: { 'pt-BR': 'Português (Brasil)' } },
+					{
+						name: "Default (Discord's own server language)",
+						value: 'default',
+						name_localizations: { 'pt-BR': 'Padrão (o idioma do Discord do servidor)' },
+					}
 				)
 		) as SlashCommandBuilder,
 
