@@ -29,6 +29,12 @@ describe('formatNotationResult', () => {
 		expect(formatNotationResult(result)).toBe('(6 + ~~2~~ + 5) = **11**');
 	});
 
+	it('marks an exploded die with !, struck through too if it was also dropped', () => {
+		const notation: ParsedNotation = { terms: [{ kind: 'dice', sign: 1, count: 2, sides: 6, exploding: true }] };
+		const result = rollNotation(notation, createFixedRng([6, 3, 4]));
+		expect(formatNotationResult(result)).toBe('(6! + 3 + 4) = **13**');
+	});
+
 	it('shows a minus sign before a subtracted term', () => {
 		const notation: ParsedNotation = {
 			terms: [

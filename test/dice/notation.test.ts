@@ -47,6 +47,28 @@ describe('parseNotation, accepted forms', () => {
 			notation: { terms: [{ kind: 'number', sign: -1, value: 2 }, { kind: 'dice', sign: 1, count: 1, sides: 6 }] },
 		});
 	});
+
+	it('parses drop-highest and drop-lowest as the equivalent keep', () => {
+		expect(parseNotation('4d6dl1')).toEqual({
+			ok: true,
+			notation: { terms: [{ kind: 'dice', sign: 1, count: 4, sides: 6, keep: { mode: 'highest', count: 3 } }] },
+		});
+		expect(parseNotation('4d6dh1')).toEqual({
+			ok: true,
+			notation: { terms: [{ kind: 'dice', sign: 1, count: 4, sides: 6, keep: { mode: 'lowest', count: 3 } }] },
+		});
+	});
+
+	it('parses an exploding term, with or without a keep modifier', () => {
+		expect(parseNotation('4d6!')).toEqual({
+			ok: true,
+			notation: { terms: [{ kind: 'dice', sign: 1, count: 4, sides: 6, exploding: true }] },
+		});
+		expect(parseNotation('4d6!kh3')).toEqual({
+			ok: true,
+			notation: { terms: [{ kind: 'dice', sign: 1, count: 4, sides: 6, exploding: true, keep: { mode: 'highest', count: 3 } }] },
+		});
+	});
 });
 
 describe('parseNotation, refused forms', () => {
@@ -75,6 +97,15 @@ describe('parseNotation, refused forms', () => {
 		const result = parseNotation('2d6kh3');
 		expect(result.ok).toBe(false);
 		expect((result as { error: string }).error).toContain("only 2 dice");
+	});
+
+	it('refuses dropping as many or more dice than were rolled', () => {
+		expect(parseNotation('3d6dl3').ok).toBe(false);
+		expect(parseNotation('3d6dl4').ok).toBe(false);
+	});
+
+	it('refuses dropping zero dice', () => {
+		expect(parseNotation('3d6dl0').ok).toBe(false);
 	});
 
 	it('refuses more than 20 terms', () => {

@@ -3,6 +3,7 @@ export interface DiceTerm {
 	sign: 1 | -1;
 	count: number;
 	sides: number;
+	exploding?: boolean;
 	keep?: { mode: 'highest' | 'lowest'; count: number };
 }
 
@@ -27,13 +28,17 @@ const MAX_COUNT = 100;
 const MIN_SIDES = 2;
 const MAX_SIDES = 1000;
 
-const TOKEN_PATTERN = /([+-])(\d*d(?:\d+|%)(?:k[hl]\d+)?|\d+)/g;
-const DICE_BODY_PATTERN = /^(\d*)d(\d+|%)(?:(kh|kl)(\d+))?$/;
+const TOKEN_PATTERN = /([+-])(\d*d(?:\d+|%)!?(?:[kd][hl]\d+)?|\d+)/g;
+const DICE_BODY_PATTERN = /^(\d*)d(\d+|%)(!)?(?:([kd][hl])(\d+))?$/;
 
 /**
- * Parses general dice notation - `2d6+3`, `d100`, `4d6kh3`, `1d20 + 1d4 - 2` - case-insensitive and
- * with spaces anywhere, into terms ready for `rollNotation`. Refuses anything outside this project's
- * stated limits with a message naming the specific problem.
+ * Parses general dice notation - `2d6+3`, `d100`, `4d6kh3`, `4d6dl1`, `4d6!`, `1d20 + 1d4 - 2` -
+ * case-insensitive and with spaces anywhere, into terms ready for `rollNotation`. Refuses anything
+ * outside this project's stated limits with a message naming the specific problem. `kh`/`kl` keep the
+ * highest or lowest K dice; `dh`/`dl` drop the highest or lowest K instead, normalized here to the
+ * equivalent keep - dropping the lowest K of N is exactly keeping the highest N-K, and the reverse.
+ * `!` makes a term explode: a die at the maximum face rolls an extra die, cascading while the newest
+ * die is also at maximum, capped per term so a very explodable die can't hang the roll.
  */
 export function parseNotation(raw: string): ParseResult {
 	const compact = raw.replace(/\s+/g, '').toLowerCase();
@@ -72,18 +77,27 @@ export function parseNotation(raw: string): ParseResult {
 				return { ok: false, error: `a die's sides must be ${MIN_SIDES} to ${MAX_SIDES}, got ${sides}` };
 			}
 
+			const exploding = diceMatch[3] === '!';
+
 			let keep: DiceTerm['keep'];
-			const keepMode = diceMatch[3];
-			if (keepMode) {
-				const keepCount = Number(diceMatch[4]);
-				if (keepCount < 1 || keepCount > count) {
-					return { ok: false, error: `can't keep ${keepCount} of only ${count} dice` };
+			const modifierLetters = diceMatch[4];
+			if (modifierLetters) {
+				const modifierCount = Number(diceMatch[5]);
+				if (modifierLetters === 'kh' || modifierLetters === 'kl') {
+					if (modifierCount < 1 || modifierCount > count) {
+						return { ok: false, error: `can't keep ${modifierCount} of only ${count} dice` };
+					}
+					keep = { mode: modifierLetters === 'kh' ? 'highest' : 'lowest', count: modifierCount };
+				} else {
+					if (modifierCount < 1 || modifierCount >= count) {
+						return { ok: false, error: `can't drop ${modifierCount} of only ${count} dice` };
+					}
+					keep = { mode: modifierLetters === 'dl' ? 'highest' : 'lowest', count: count - modifierCount };
 				}
-				keep = { mode: keepMode === 'kh' ? 'highest' : 'lowest', count: keepCount };
 			}
 
 			totalDice += count;
-			terms.push({ kind: 'dice', sign, count, sides, ...(keep ? { keep } : {}) });
+			terms.push({ kind: 'dice', sign, count, sides, ...(exploding ? { exploding } : {}), ...(keep ? { keep } : {}) });
 		} else {
 			terms.push({ kind: 'number', sign, value: Number(body) });
 		}

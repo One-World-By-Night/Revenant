@@ -43,4 +43,43 @@ describe('rollNotation', () => {
 		expect(result.total).toBe(10);
 		expect(result.terms[0]?.dice).toHaveLength(4);
 	});
+
+	it('explodes a maximum die into an extra die, added to the total', () => {
+		const notation: ParsedNotation = { terms: [{ kind: 'dice', sign: 1, count: 2, sides: 6, exploding: true }] };
+		const result = rollNotation(notation, createFixedRng([6, 3, 4]));
+		const dice = result.terms[0]?.dice ?? [];
+		expect(dice.map((die) => die.value)).toEqual([6, 3, 4]);
+		expect(dice.map((die) => die.exploded)).toEqual([true, false, false]);
+		expect(result.total).toBe(13);
+	});
+
+	it('cascades while the extra die also explodes', () => {
+		const notation: ParsedNotation = { terms: [{ kind: 'dice', sign: 1, count: 1, sides: 6, exploding: true }] };
+		const result = rollNotation(notation, createFixedRng([6, 6, 2]));
+		expect(result.total).toBe(14);
+		expect(result.terms[0]?.dice.map((die) => die.exploded)).toEqual([true, true, false]);
+	});
+
+	it('does not explode a die that is not at the maximum face', () => {
+		const notation: ParsedNotation = { terms: [{ kind: 'dice', sign: 1, count: 1, sides: 6, exploding: true }] };
+		const result = rollNotation(notation, createFixedRng([5]));
+		expect(result.terms[0]?.dice).toHaveLength(1);
+		expect(result.total).toBe(5);
+	});
+
+	it('caps a cascade so an always-maximum die cannot hang the roll', () => {
+		const notation: ParsedNotation = { terms: [{ kind: 'dice', sign: 1, count: 1, sides: 2, exploding: true }] };
+		const result = rollNotation(notation, () => 2);
+		expect(result.terms[0]?.dice).toHaveLength(101);
+	});
+
+	it('applies a keep modifier over the full exploded set of dice', () => {
+		const notation: ParsedNotation = {
+			terms: [{ kind: 'dice', sign: 1, count: 2, sides: 6, exploding: true, keep: { mode: 'highest', count: 2 } }],
+		};
+		const result = rollNotation(notation, createFixedRng([6, 1, 5]));
+		const dice = result.terms[0]?.dice ?? [];
+		expect(dice.map((die) => die.kept)).toEqual([true, false, true]);
+		expect(result.total).toBe(11);
+	});
 });

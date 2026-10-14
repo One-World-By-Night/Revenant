@@ -2,7 +2,8 @@ import type { RollResult, TermResult, DieResult } from './roll.js';
 import type { PoolResult, PoolDie } from './pools.js';
 
 function formatDie(die: DieResult): string {
-	return die.kept ? String(die.value) : `~~${die.value}~~`;
+	const text = die.exploded ? `${die.value}!` : String(die.value);
+	return die.kept ? text : `~~${text}~~`;
 }
 
 function formatTerm(term: TermResult, isFirst: boolean): string {
@@ -13,7 +14,8 @@ function formatTerm(term: TermResult, isFirst: boolean): string {
 }
 
 /**
- * Renders a general-notation roll as every die, struck through when not kept, followed by the total.
+ * Renders a general-notation roll as every die, struck through when not kept and marked `!` when it
+ * triggered an explosion, followed by the total.
  */
 export function formatNotationResult(result: RollResult): string {
 	const parts = result.terms.map((term, index) => formatTerm(term, index === 0));
