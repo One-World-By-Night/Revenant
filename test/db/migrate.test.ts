@@ -6,7 +6,7 @@ import { runMigrations } from '../../src/db/migrate.js';
 
 const { Pool } = pg;
 
-const DATABASE_URL = process.env.DATABASE_URL ?? 'postgres://postgres:devpassword@localhost:55432/berevenant';
+const DATABASE_URL = process.env.TEST_DATABASE_URL ?? 'postgres://postgres:devpassword@localhost:55432/berevenant_test';
 const MIGRATIONS_DIR = join(dirname(fileURLToPath(import.meta.url)), '../../src/db/migrations');
 
 const pool = new Pool({ connectionString: DATABASE_URL });
