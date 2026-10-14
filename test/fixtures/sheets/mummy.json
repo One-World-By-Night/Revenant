@@ -1,0 +1,236 @@
+{
+    "title": "Ashotep Ra-Nefer",
+    "subtitle": "Mummy",
+    "header": [
+        [
+            "Printed",
+            "2026-10-13"
+        ],
+        [
+            "Last modified",
+            "2026-10-08"
+        ],
+        [
+            "Status",
+            "Active"
+        ],
+        [
+            "Player",
+            "Stock Sheet"
+        ],
+        [
+            "XP Earned",
+            "85"
+        ],
+        [
+            "XP Unspent",
+            "9"
+        ],
+        [
+            "Amenti",
+            "Aided of Anpu"
+        ],
+        [
+            "Nature",
+            "Traditionalist"
+        ],
+        [
+            "Demeanor",
+            "Sage"
+        ],
+        [
+            "Sekhem",
+            "x5",
+            5
+        ],
+        [
+            "Balance",
+            "x5",
+            5
+        ],
+        [
+            "Willpower",
+            "x6",
+            6
+        ]
+    ],
+    "portrait_path": null,
+    "style": {
+        "font_family": null,
+        "accent_color": null,
+        "background_color": null,
+        "text_color": null,
+        "background_image_path": null,
+        "section_graphics": []
+    },
+    "sections": [
+        {
+            "block_slug": "met-physical-traits",
+            "section_type": "trait_list",
+            "title": "Physical Traits · 3",
+            "column": 1,
+            "order": 5,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Enduring x3",
+                            "indent": 0,
+                            "circles": 3
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-social-traits",
+            "section_type": "trait_list",
+            "title": "Social Traits · 2",
+            "column": 1,
+            "order": 6,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Dignified x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-mental-traits",
+            "section_type": "trait_list",
+            "title": "Mental Traits · 3",
+            "column": 1,
+            "order": 7,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Knowledgeable x3",
+                            "indent": 0,
+                            "circles": 3
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "mummy-abilities",
+            "section_type": "trait_list",
+            "title": "Mummy Abilities · 9",
+            "column": 1,
+            "order": 11,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Academics x3",
+                            "indent": 0,
+                            "circles": 3
+                        },
+                        {
+                            "text": "Medicine x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Occult x4",
+                            "indent": 0,
+                            "circles": 4
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "mummy-backgrounds",
+            "section_type": "trait_list",
+            "title": "Mummy Backgrounds · 3",
+            "column": 1,
+            "order": 12,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Artifact",
+                            "indent": 0,
+                            "circles": 1
+                        },
+                        {
+                            "text": "Tomb x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "mummy-hekau",
+            "section_type": "tiered_power",
+            "title": "Mummy Hekau",
+            "column": 1,
+            "order": 13,
+            "span": 6,
+            "rows": [
+                "Alchemy 2",
+                "Necromancy 1"
+            ]
+        },
+        {
+            "block_slug": "mummy-merits",
+            "section_type": "trait_list",
+            "title": "Mummy Merits",
+            "column": 1,
+            "order": 15,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Destiny 4"
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "mummy-flaws",
+            "section_type": "trait_list",
+            "title": "Mummy Flaws",
+            "column": 1,
+            "order": 16,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Haunted 2"
+                    ]
+                }
+            ]
+        }
+    ],
+    "prose": [],
+    "xp_history": [],
+    "provenance_lines": [
+        "01a11da7-7bfa-7337-8c1d-1c84a953518f",
+        "be-demo · 2026-10-13 · Beyond Elysium 1.6.0"
+    ]
+}

@@ -1,0 +1,280 @@
+{
+    "title": "Skitter",
+    "subtitle": "Bête",
+    "header": [
+        [
+            "Printed",
+            "2026-10-13"
+        ],
+        [
+            "Last modified",
+            "2026-10-08"
+        ],
+        [
+            "Status",
+            "Active"
+        ],
+        [
+            "Player",
+            "Stock Sheet"
+        ],
+        [
+            "XP Earned",
+            "45"
+        ],
+        [
+            "XP Unspent",
+            "5"
+        ],
+        [
+            "Fera Type",
+            "Ananasi"
+        ],
+        [
+            "Breed",
+            "Homid"
+        ],
+        [
+            "Rank",
+            "1"
+        ],
+        [
+            "Honor",
+            "x2",
+            2
+        ],
+        [
+            "Glory",
+            "x2",
+            2
+        ],
+        [
+            "Wisdom",
+            "x3",
+            3
+        ],
+        [
+            "Rage",
+            "x3",
+            3
+        ],
+        [
+            "Gnosis",
+            "x4",
+            4
+        ],
+        [
+            "Willpower",
+            "x5",
+            5
+        ],
+        [
+            "Nature",
+            "Conniver"
+        ],
+        [
+            "Demeanor",
+            "Loner"
+        ]
+    ],
+    "portrait_path": null,
+    "style": {
+        "font_family": null,
+        "accent_color": null,
+        "background_color": null,
+        "text_color": null,
+        "background_image_path": null,
+        "section_graphics": []
+    },
+    "sections": [
+        {
+            "block_slug": "met-physical-traits",
+            "section_type": "trait_list",
+            "title": "Physical Traits · 3",
+            "column": 1,
+            "order": 6,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Dexterous x3",
+                            "indent": 0,
+                            "circles": 3
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-social-traits",
+            "section_type": "trait_list",
+            "title": "Social Traits · 2",
+            "column": 1,
+            "order": 7,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Manipulative x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-mental-traits",
+            "section_type": "trait_list",
+            "title": "Mental Traits · 4",
+            "column": 1,
+            "order": 8,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Analytical x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Cunning x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "fera-abilities",
+            "section_type": "trait_list",
+            "title": "Fera Abilities · 7",
+            "column": 1,
+            "order": 12,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Crafts x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Occult x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Stealth x3",
+                            "indent": 0,
+                            "circles": 3
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "fera-backgrounds",
+            "section_type": "trait_list",
+            "title": "Fera Backgrounds · 3",
+            "column": 1,
+            "order": 13,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Freak Factor x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Secrets",
+                            "indent": 0,
+                            "circles": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "fera-gifts",
+            "section_type": "tiered_power",
+            "title": "Gifts",
+            "column": 1,
+            "order": 14,
+            "span": 6,
+            "rows": [
+                "Gurahl: Ursine: Heightened Senses (basic)",
+                "Kitsune: Shinju: Sense Wyrm (basic)"
+            ]
+        },
+        {
+            "block_slug": "fera-rites",
+            "section_type": "trait_list",
+            "title": "Fera Rites",
+            "column": 1,
+            "order": 15,
+            "span": 6,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Rite of Contrition"
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "fera-merits",
+            "section_type": "trait_list",
+            "title": "Fera Merits",
+            "column": 1,
+            "order": 16,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Danger Sense 2"
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "fera-flaws",
+            "section_type": "trait_list",
+            "title": "Fera Flaws",
+            "column": 1,
+            "order": 17,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Phobia 3"
+                    ]
+                }
+            ]
+        }
+    ],
+    "prose": [],
+    "xp_history": [],
+    "provenance_lines": [
+        "01a11da7-7bf2-7b89-a02a-3634656ee675",
+        "be-demo · 2026-10-13 · Beyond Elysium 1.6.0"
+    ]
+}

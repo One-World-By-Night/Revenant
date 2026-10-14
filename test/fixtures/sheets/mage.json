@@ -1,0 +1,259 @@
+{
+    "title": "Dr. Adrian Voss",
+    "subtitle": "Mage",
+    "header": [
+        [
+            "Printed",
+            "2026-10-13"
+        ],
+        [
+            "Last modified",
+            "2026-10-08"
+        ],
+        [
+            "Status",
+            "Active"
+        ],
+        [
+            "XP Earned",
+            "100"
+        ],
+        [
+            "XP Unspent",
+            "-8"
+        ],
+        [
+            "Tradition",
+            "Order of Hermes"
+        ],
+        [
+            "Essence",
+            "Questing"
+        ],
+        [
+            "Cabal",
+            "The Silver Ladder Circle"
+        ],
+        [
+            "Rank",
+            "2"
+        ],
+        [
+            "Nature",
+            "Sage"
+        ],
+        [
+            "Demeanor",
+            "Pedagogue"
+        ],
+        [
+            "Arete",
+            "x3",
+            3
+        ],
+        [
+            "Quintessence",
+            "x5",
+            5
+        ],
+        [
+            "Paradox",
+            "x0",
+            0
+        ],
+        [
+            "Willpower",
+            "x6",
+            6
+        ]
+    ],
+    "portrait_path": null,
+    "style": {
+        "font_family": null,
+        "accent_color": null,
+        "background_color": null,
+        "text_color": null,
+        "background_image_path": null,
+        "section_graphics": []
+    },
+    "sections": [
+        {
+            "block_slug": "met-physical-traits",
+            "section_type": "trait_list",
+            "title": "Physical Traits · 1",
+            "column": 1,
+            "order": 5,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Enduring",
+                            "indent": 0,
+                            "circles": 1
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-social-traits",
+            "section_type": "trait_list",
+            "title": "Social Traits · 2",
+            "column": 1,
+            "order": 6,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Diplomatic x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-mental-traits",
+            "section_type": "trait_list",
+            "title": "Mental Traits · 7",
+            "column": 1,
+            "order": 7,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Analytical x3",
+                            "indent": 0,
+                            "circles": 3
+                        },
+                        {
+                            "text": "Knowledgeable x4",
+                            "indent": 0,
+                            "circles": 4
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "mage-abilities",
+            "section_type": "trait_list",
+            "title": "Mage Abilities · 11",
+            "column": 1,
+            "order": 11,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Academics x3",
+                            "indent": 0,
+                            "circles": 3
+                        },
+                        {
+                            "text": "Investigation x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Occult x4",
+                            "indent": 0,
+                            "circles": 4
+                        },
+                        {
+                            "text": "Science x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "mage-backgrounds",
+            "section_type": "trait_list",
+            "title": "Mage Backgrounds · 4",
+            "column": 1,
+            "order": 12,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Library x3",
+                            "indent": 0,
+                            "circles": 3
+                        },
+                        {
+                            "text": "Node",
+                            "indent": 0,
+                            "circles": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "mage-spheres",
+            "section_type": "tiered_power",
+            "title": "Mage Spheres",
+            "column": 1,
+            "order": 13,
+            "span": 6,
+            "rows": [
+                "Forces 2",
+                "Correspondence 1"
+            ]
+        },
+        {
+            "block_slug": "mage-merits",
+            "section_type": "trait_list",
+            "title": "Mage Merits",
+            "column": 1,
+            "order": 15,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Eidetic Memory 5"
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "mage-flaws",
+            "section_type": "trait_list",
+            "title": "Mage Flaws",
+            "column": 1,
+            "order": 16,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Absent-Minded 2"
+                    ]
+                }
+            ]
+        }
+    ],
+    "prose": [],
+    "xp_history": [],
+    "provenance_lines": [
+        "01a11da7-7be6-7bf4-b8a6-bbbfd66443f3",
+        "be-demo · 2026-10-13 · Beyond Elysium 1.6.0"
+    ]
+}

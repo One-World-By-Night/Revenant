@@ -1,0 +1,323 @@
+{
+    "title": "Isolde Marchetti",
+    "subtitle": "Vampire",
+    "header": [
+        [
+            "Printed",
+            "2026-10-13"
+        ],
+        [
+            "Last modified",
+            "2026-10-08"
+        ],
+        [
+            "Status",
+            "Active"
+        ],
+        [
+            "XP Earned",
+            "90"
+        ],
+        [
+            "XP Unspent",
+            "10"
+        ],
+        [
+            "Clan",
+            "Tremere"
+        ],
+        [
+            "Sect",
+            "Camarilla"
+        ],
+        [
+            "Generation",
+            "9"
+        ],
+        [
+            "Sire",
+            "Radu Bathory"
+        ],
+        [
+            "Title",
+            "Regent's Envoy"
+        ],
+        [
+            "Morality Path",
+            "Humanity"
+        ],
+        [
+            "Nature",
+            "Analyst"
+        ],
+        [
+            "Demeanor",
+            "Bureaucrat"
+        ],
+        [
+            "Blood",
+            "x10",
+            10
+        ],
+        [
+            "Willpower",
+            "x6",
+            6
+        ],
+        [
+            "Morality",
+            "x7",
+            7
+        ]
+    ],
+    "portrait_path": null,
+    "style": {
+        "font_family": null,
+        "accent_color": null,
+        "background_color": null,
+        "text_color": null,
+        "background_image_path": null,
+        "section_graphics": []
+    },
+    "sections": [
+        {
+            "block_slug": "vampire-virtues",
+            "section_type": "resource_pool",
+            "title": "Virtues Humanity 7",
+            "column": 1,
+            "order": 4,
+            "span": 3,
+            "rows": [
+                {
+                    "text": "Conscience x3",
+                    "indent": 0,
+                    "circles": 3
+                },
+                {
+                    "text": "Self-Control x4",
+                    "indent": 0,
+                    "circles": 4
+                },
+                {
+                    "text": "Courage x3",
+                    "indent": 0,
+                    "circles": 3
+                }
+            ]
+        },
+        {
+            "block_slug": "met-physical-traits",
+            "section_type": "trait_list",
+            "title": "Physical Traits · 3",
+            "column": 1,
+            "order": 6,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Graceful x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Quick",
+                            "indent": 0,
+                            "circles": 1
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-social-traits",
+            "section_type": "trait_list",
+            "title": "Social Traits · 3",
+            "column": 1,
+            "order": 7,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Elegant x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Persuasive",
+                            "indent": 0,
+                            "circles": 1
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-mental-traits",
+            "section_type": "trait_list",
+            "title": "Mental Traits · 4",
+            "column": 1,
+            "order": 8,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Analytical x3",
+                            "indent": 0,
+                            "circles": 3
+                        },
+                        {
+                            "text": "Focused",
+                            "indent": 0,
+                            "circles": 1
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "vampire-abilities",
+            "section_type": "trait_list",
+            "title": "Vampire Abilities · 11",
+            "column": 1,
+            "order": 12,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Academics x3",
+                            "indent": 0,
+                            "circles": 3
+                        },
+                        {
+                            "text": "Etiquette x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Investigation x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Occult x4",
+                            "indent": 0,
+                            "circles": 4
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "vampire-backgrounds",
+            "section_type": "trait_list",
+            "title": "Vampire Backgrounds · 3",
+            "column": 1,
+            "order": 13,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Resources x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Retainers",
+                            "indent": 0,
+                            "circles": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "vampire-disciplines",
+            "section_type": "tiered_power",
+            "title": "Disciplines",
+            "column": 1,
+            "order": 14,
+            "span": 6,
+            "rows": [
+                "Auspex 1"
+            ]
+        },
+        {
+            "block_slug": "vampire-blood-magic",
+            "section_type": "tiered_power",
+            "title": "Vampire Blood Magic",
+            "column": 1,
+            "order": 15,
+            "span": 6,
+            "rows": [
+                "Thaumaturgy (Camarilla): Path of Blood 2"
+            ]
+        },
+        {
+            "block_slug": "vampire-rituals",
+            "section_type": "trait_list",
+            "title": "Rituals",
+            "column": 1,
+            "order": 17,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Thaumaturgy: Blood Mastery (basic)"
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "vampire-merits",
+            "section_type": "trait_list",
+            "title": "Vampire Merits",
+            "column": 1,
+            "order": 21,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Iron Will 5"
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "vampire-flaws",
+            "section_type": "trait_list",
+            "title": "Vampire Flaws",
+            "column": 1,
+            "order": 22,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Curiosity 2"
+                    ]
+                }
+            ]
+        }
+    ],
+    "prose": [],
+    "xp_history": [],
+    "provenance_lines": [
+        "01a11da7-7bd9-70a7-8bf0-ff384606a2da",
+        "be-demo · 2026-10-13 · Beyond Elysium 1.6.0"
+    ]
+}

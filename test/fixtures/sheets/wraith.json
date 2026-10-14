@@ -1,0 +1,262 @@
+{
+    "title": "Corwin Ashe",
+    "subtitle": "Wraith",
+    "header": [
+        [
+            "Printed",
+            "2026-10-13"
+        ],
+        [
+            "Last modified",
+            "2026-10-08"
+        ],
+        [
+            "Status",
+            "Active"
+        ],
+        [
+            "Player",
+            "Stock Sheet"
+        ],
+        [
+            "XP Earned",
+            "55"
+        ],
+        [
+            "XP Unspent",
+            "6"
+        ],
+        [
+            "Ethnos",
+            "Wraith"
+        ],
+        [
+            "Guild",
+            "Puppeteer"
+        ],
+        [
+            "Faction",
+            "Renegade"
+        ],
+        [
+            "Legion",
+            "The Skeletal Legion"
+        ],
+        [
+            "Shadow",
+            "The Malfean Whisper"
+        ],
+        [
+            "Nature",
+            "Manipulator"
+        ],
+        [
+            "Demeanor",
+            "Rogue"
+        ],
+        [
+            "Pathos",
+            "x4",
+            4
+        ],
+        [
+            "Corpus",
+            "x6",
+            6
+        ],
+        [
+            "Willpower",
+            "x5",
+            5
+        ],
+        [
+            "Angst",
+            "x2",
+            2
+        ],
+        [
+            "Shadow XP",
+            "x0",
+            0
+        ]
+    ],
+    "portrait_path": null,
+    "style": {
+        "font_family": null,
+        "accent_color": null,
+        "background_color": null,
+        "text_color": null,
+        "background_image_path": null,
+        "section_graphics": []
+    },
+    "sections": [
+        {
+            "block_slug": "met-physical-traits",
+            "section_type": "trait_list",
+            "title": "Physical Traits · 2",
+            "column": 1,
+            "order": 5,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Steady x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-social-traits",
+            "section_type": "trait_list",
+            "title": "Social Traits · 3",
+            "column": 1,
+            "order": 6,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Manipulative x3",
+                            "indent": 0,
+                            "circles": 3
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-mental-traits",
+            "section_type": "trait_list",
+            "title": "Mental Traits · 2",
+            "column": 1,
+            "order": 7,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Shrewd x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "wraith-abilities",
+            "section_type": "trait_list",
+            "title": "Wraith Abilities · 7",
+            "column": 1,
+            "order": 11,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Occult x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Stealth x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Subterfuge x3",
+                            "indent": 0,
+                            "circles": 3
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "wraith-backgrounds",
+            "section_type": "trait_list",
+            "title": "Wraith Backgrounds · 3",
+            "column": 1,
+            "order": 12,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Eidolon x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Relic",
+                            "indent": 0,
+                            "circles": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "wraith-arcanoi",
+            "section_type": "tiered_power",
+            "title": "Wraith Arcanoi",
+            "column": 1,
+            "order": 13,
+            "span": 6,
+            "rows": [
+                "Argos 2",
+                "Keening 1"
+            ]
+        },
+        {
+            "block_slug": "wraith-merits",
+            "section_type": "trait_list",
+            "title": "Wraith Merits",
+            "column": 1,
+            "order": 17,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Medium 2"
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "wraith-flaws",
+            "section_type": "trait_list",
+            "title": "Wraith Flaws",
+            "column": 1,
+            "order": 18,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Haunted 2"
+                    ]
+                }
+            ]
+        }
+    ],
+    "prose": [],
+    "xp_history": [],
+    "provenance_lines": [
+        "01a11da7-7bfd-7761-bf45-b9950e1fe587",
+        "be-demo · 2026-10-13 · Beyond Elysium 1.6.0"
+    ]
+}

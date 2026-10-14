@@ -1,0 +1,264 @@
+{
+    "title": "Fennick Larkspur",
+    "subtitle": "Changeling",
+    "header": [
+        [
+            "Printed",
+            "2026-10-13"
+        ],
+        [
+            "Last modified",
+            "2026-10-08"
+        ],
+        [
+            "Status",
+            "Active"
+        ],
+        [
+            "Player",
+            "Stock Sheet"
+        ],
+        [
+            "XP Earned",
+            "45"
+        ],
+        [
+            "XP Unspent",
+            "6"
+        ],
+        [
+            "Kith",
+            "Pooka"
+        ],
+        [
+            "Seeming",
+            "Wilder"
+        ],
+        [
+            "Court",
+            "Seelie"
+        ],
+        [
+            "Seelie Legacy",
+            "Bumpkin"
+        ],
+        [
+            "Unseelie Legacy",
+            "Beast"
+        ],
+        [
+            "Nature",
+            "Trickster"
+        ],
+        [
+            "Demeanor",
+            "Jester"
+        ],
+        [
+            "Glamour",
+            "x5",
+            5
+        ],
+        [
+            "Banality",
+            "x3",
+            3
+        ],
+        [
+            "Willpower",
+            "x4",
+            4
+        ]
+    ],
+    "portrait_path": null,
+    "style": {
+        "font_family": null,
+        "accent_color": null,
+        "background_color": null,
+        "text_color": null,
+        "background_image_path": null,
+        "section_graphics": []
+    },
+    "sections": [
+        {
+            "block_slug": "met-physical-traits",
+            "section_type": "trait_list",
+            "title": "Physical Traits · 2",
+            "column": 1,
+            "order": 5,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Nimble x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-social-traits",
+            "section_type": "trait_list",
+            "title": "Social Traits · 3",
+            "column": 1,
+            "order": 6,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Charming x3",
+                            "indent": 0,
+                            "circles": 3
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-mental-traits",
+            "section_type": "trait_list",
+            "title": "Mental Traits · 3",
+            "column": 1,
+            "order": 7,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Creative x3",
+                            "indent": 0,
+                            "circles": 3
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "changeling-abilities",
+            "section_type": "trait_list",
+            "title": "Changeling Abilities · 7",
+            "column": 1,
+            "order": 11,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Performance x3",
+                            "indent": 0,
+                            "circles": 3
+                        },
+                        {
+                            "text": "Streetwise x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Subterfuge x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "changeling-backgrounds",
+            "section_type": "trait_list",
+            "title": "Changeling Backgrounds · 3",
+            "column": 1,
+            "order": 12,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Chimera x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Holdings",
+                            "indent": 0,
+                            "circles": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "changeling-arts",
+            "section_type": "tiered_power",
+            "title": "Changeling Arts",
+            "column": 1,
+            "order": 13,
+            "span": 6,
+            "rows": [
+                "Chicanery 2",
+                "Legerdemain 1"
+            ]
+        },
+        {
+            "block_slug": "changeling-realms",
+            "section_type": "tiered_power",
+            "title": "Changeling Realms",
+            "column": 1,
+            "order": 14,
+            "span": 6,
+            "rows": [
+                "Actor 2",
+                "Prop 1"
+            ]
+        },
+        {
+            "block_slug": "changeling-merits",
+            "section_type": "trait_list",
+            "title": "Changeling Merits",
+            "column": 1,
+            "order": 16,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Daredevil 3"
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "changeling-flaws",
+            "section_type": "trait_list",
+            "title": "Changeling Flaws",
+            "column": 1,
+            "order": 17,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Curiosity 2"
+                    ]
+                }
+            ]
+        }
+    ],
+    "prose": [],
+    "xp_history": [],
+    "provenance_lines": [
+        "01a11da7-7be9-78c6-b8df-9500b040fbfc",
+        "be-demo · 2026-10-13 · Beyond Elysium 1.6.0"
+    ]
+}

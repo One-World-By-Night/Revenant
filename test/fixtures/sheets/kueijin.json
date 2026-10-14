@@ -1,0 +1,268 @@
+{
+    "title": "Mei Fen Zhao",
+    "subtitle": "Kuei-Jin",
+    "header": [
+        [
+            "Printed",
+            "2026-10-13"
+        ],
+        [
+            "Last modified",
+            "2026-10-08"
+        ],
+        [
+            "Status",
+            "Active"
+        ],
+        [
+            "Player",
+            "Stock Sheet"
+        ],
+        [
+            "XP Earned",
+            "70"
+        ],
+        [
+            "XP Unspent",
+            "8"
+        ],
+        [
+            "Dharma",
+            "Way of the Resplendent Crane"
+        ],
+        [
+            "Direction",
+            "East"
+        ],
+        [
+            "Balance",
+            "Balanced"
+        ],
+        [
+            "Station",
+            "Wu Xing Envoy"
+        ],
+        [
+            "Nature",
+            "Sage"
+        ],
+        [
+            "Demeanor",
+            "Mediator"
+        ],
+        [
+            "Hun",
+            "x5",
+            5
+        ],
+        [
+            "Po",
+            "x3",
+            3
+        ],
+        [
+            "Demon Chi",
+            "x0",
+            0
+        ],
+        [
+            "Willpower",
+            "x2",
+            2
+        ],
+        [
+            "Dharma",
+            "x1",
+            1
+        ],
+        [
+            "Yin Chi",
+            "x4",
+            4
+        ],
+        [
+            "Yang Chi",
+            "x3",
+            3
+        ]
+    ],
+    "portrait_path": null,
+    "style": {
+        "font_family": null,
+        "accent_color": null,
+        "background_color": null,
+        "text_color": null,
+        "background_image_path": null,
+        "section_graphics": []
+    },
+    "sections": [
+        {
+            "block_slug": "met-physical-traits",
+            "section_type": "trait_list",
+            "title": "Physical Traits · 2",
+            "column": 1,
+            "order": 7,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Graceful x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-social-traits",
+            "section_type": "trait_list",
+            "title": "Social Traits · 3",
+            "column": 1,
+            "order": 8,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Diplomatic x3",
+                            "indent": 0,
+                            "circles": 3
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-mental-traits",
+            "section_type": "trait_list",
+            "title": "Mental Traits · 3",
+            "column": 1,
+            "order": 9,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Wise x3",
+                            "indent": 0,
+                            "circles": 3
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "kueijin-abilities",
+            "section_type": "trait_list",
+            "title": "Abilities · 8",
+            "column": 1,
+            "order": 13,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Etiquette x3",
+                            "indent": 0,
+                            "circles": 3
+                        },
+                        {
+                            "text": "Meditation x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Occult x3",
+                            "indent": 0,
+                            "circles": 3
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "kueijin-backgrounds",
+            "section_type": "trait_list",
+            "title": "Kuei-Jin Backgrounds · 3",
+            "column": 1,
+            "order": 14,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Herd x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Rites",
+                            "indent": 0,
+                            "circles": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "kueijin-disciplines",
+            "section_type": "tiered_power",
+            "title": "Kuei-Jin Disciplines",
+            "column": 1,
+            "order": 15,
+            "span": 6,
+            "rows": [
+                "Cultivation 2",
+                "Yin Prana 1"
+            ]
+        },
+        {
+            "block_slug": "kueijin-merits",
+            "section_type": "trait_list",
+            "title": "Merits",
+            "column": 1,
+            "order": 18,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Sanctity 2"
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "kueijin-flaws",
+            "section_type": "trait_list",
+            "title": "Flaws",
+            "column": 1,
+            "order": 19,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Obsession 3"
+                    ]
+                }
+            ]
+        }
+    ],
+    "prose": [],
+    "xp_history": [],
+    "provenance_lines": [
+        "01a11da7-7bf5-712c-b238-cbc625eca978",
+        "be-demo · 2026-10-13 · Beyond Elysium 1.6.0"
+    ]
+}

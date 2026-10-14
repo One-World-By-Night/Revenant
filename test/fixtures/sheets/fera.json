@@ -1,0 +1,288 @@
+{
+    "title": "Kesuk Frostpaw",
+    "subtitle": "Fera",
+    "header": [
+        [
+            "Printed",
+            "2026-10-13"
+        ],
+        [
+            "Last modified",
+            "2026-10-08"
+        ],
+        [
+            "Status",
+            "Active"
+        ],
+        [
+            "Player",
+            "Stock Sheet"
+        ],
+        [
+            "XP Earned",
+            "60"
+        ],
+        [
+            "XP Unspent",
+            "7"
+        ],
+        [
+            "Fera Type",
+            "Forest Walkers"
+        ],
+        [
+            "Breed",
+            "Homid"
+        ],
+        [
+            "Rank",
+            "2"
+        ],
+        [
+            "Pack",
+            "The Long Winter Den"
+        ],
+        [
+            "Totem",
+            "Bear"
+        ],
+        [
+            "Honor",
+            "x3",
+            3
+        ],
+        [
+            "Glory",
+            "x2",
+            2
+        ],
+        [
+            "Wisdom",
+            "x4",
+            4
+        ],
+        [
+            "Rage",
+            "x3",
+            3
+        ],
+        [
+            "Gnosis",
+            "x5",
+            5
+        ],
+        [
+            "Willpower",
+            "x6",
+            6
+        ],
+        [
+            "Nature",
+            "Caregiver"
+        ],
+        [
+            "Demeanor",
+            "Defender"
+        ]
+    ],
+    "portrait_path": null,
+    "style": {
+        "font_family": null,
+        "accent_color": null,
+        "background_color": null,
+        "text_color": null,
+        "background_image_path": null,
+        "section_graphics": []
+    },
+    "sections": [
+        {
+            "block_slug": "met-physical-traits",
+            "section_type": "trait_list",
+            "title": "Physical Traits · 5",
+            "column": 1,
+            "order": 6,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Enduring x3",
+                            "indent": 0,
+                            "circles": 3
+                        },
+                        {
+                            "text": "Vigorous x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-social-traits",
+            "section_type": "trait_list",
+            "title": "Social Traits · 2",
+            "column": 1,
+            "order": 7,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Compassionate x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-mental-traits",
+            "section_type": "trait_list",
+            "title": "Mental Traits · 3",
+            "column": 1,
+            "order": 8,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Patient x3",
+                            "indent": 0,
+                            "circles": 3
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "fera-abilities",
+            "section_type": "trait_list",
+            "title": "Fera Abilities · 8",
+            "column": 1,
+            "order": 12,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Brawl x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Medicine x3",
+                            "indent": 0,
+                            "circles": 3
+                        },
+                        {
+                            "text": "Survival x3",
+                            "indent": 0,
+                            "circles": 3
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "fera-backgrounds",
+            "section_type": "trait_list",
+            "title": "Fera Backgrounds · 3",
+            "column": 1,
+            "order": 13,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Kinfolk x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Pure Breed",
+                            "indent": 0,
+                            "circles": 1
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "fera-gifts",
+            "section_type": "tiered_power",
+            "title": "Gifts",
+            "column": 1,
+            "order": 14,
+            "span": 6,
+            "rows": [
+                "Ananasi: Resist Pain (basic)",
+                "Gurahl: Ursine: Heightened Senses (basic)"
+            ]
+        },
+        {
+            "block_slug": "fera-rites",
+            "section_type": "trait_list",
+            "title": "Fera Rites",
+            "column": 1,
+            "order": 15,
+            "span": 6,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Rite of Contrition"
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "fera-merits",
+            "section_type": "trait_list",
+            "title": "Fera Merits",
+            "column": 1,
+            "order": 16,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Guardian Angel 6"
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "fera-flaws",
+            "section_type": "trait_list",
+            "title": "Fera Flaws",
+            "column": 1,
+            "order": 17,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Deep Sleeper 1"
+                    ]
+                }
+            ]
+        }
+    ],
+    "prose": [],
+    "xp_history": [],
+    "provenance_lines": [
+        "01a11da7-7bee-78bb-9cf1-3e73c619e6c0",
+        "be-demo · 2026-10-13 · Beyond Elysium 1.6.0"
+    ]
+}

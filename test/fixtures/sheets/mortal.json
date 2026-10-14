@@ -1,0 +1,234 @@
+{
+    "title": "Detective Rosa Alvarez",
+    "subtitle": "Mortal",
+    "header": [
+        [
+            "Printed",
+            "2026-10-13"
+        ],
+        [
+            "Last modified",
+            "2026-10-08"
+        ],
+        [
+            "Status",
+            "Active"
+        ],
+        [
+            "XP Earned",
+            "30"
+        ],
+        [
+            "XP Unspent",
+            "4"
+        ],
+        [
+            "Motivation",
+            "Justice for the voiceless"
+        ],
+        [
+            "Association",
+            "Chicago PD"
+        ],
+        [
+            "Nature",
+            "Crusader"
+        ],
+        [
+            "Demeanor",
+            "Director"
+        ],
+        [
+            "Willpower",
+            "x5",
+            5
+        ],
+        [
+            "True Faith",
+            "x0",
+            0
+        ],
+        [
+            "Humanity",
+            "x8",
+            8
+        ]
+    ],
+    "portrait_path": null,
+    "style": {
+        "font_family": null,
+        "accent_color": null,
+        "background_color": null,
+        "text_color": null,
+        "background_image_path": null,
+        "section_graphics": []
+    },
+    "sections": [
+        {
+            "block_slug": "met-physical-traits",
+            "section_type": "trait_list",
+            "title": "Physical Traits · 2",
+            "column": 1,
+            "order": 5,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Athletic x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-social-traits",
+            "section_type": "trait_list",
+            "title": "Social Traits · 2",
+            "column": 1,
+            "order": 6,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Persuasive x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "met-mental-traits",
+            "section_type": "trait_list",
+            "title": "Mental Traits · 5",
+            "column": 1,
+            "order": 7,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Analytical x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Observant x3",
+                            "indent": 0,
+                            "circles": 3
+                        }
+                    ]
+                }
+            ],
+            "band": true
+        },
+        {
+            "block_slug": "mortal-abilities",
+            "section_type": "trait_list",
+            "title": "Mortal Abilities · 11",
+            "column": 1,
+            "order": 23,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Empathy x2",
+                            "indent": 0,
+                            "circles": 2
+                        },
+                        {
+                            "text": "Firearms x3",
+                            "indent": 0,
+                            "circles": 3
+                        },
+                        {
+                            "text": "Investigation x4",
+                            "indent": 0,
+                            "circles": 4
+                        },
+                        {
+                            "text": "Streetwise x2",
+                            "indent": 0,
+                            "circles": 2
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "mortal-backgrounds",
+            "section_type": "trait_list",
+            "title": "Mortal Backgrounds · 4",
+            "column": 1,
+            "order": 24,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Allies",
+                            "indent": 0,
+                            "circles": 1
+                        },
+                        {
+                            "text": "Contacts x3",
+                            "indent": 0,
+                            "circles": 3
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "mortal-merits",
+            "section_type": "trait_list",
+            "title": "Mortal Merits",
+            "column": 1,
+            "order": 26,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Common Sense 1"
+                    ]
+                }
+            ]
+        },
+        {
+            "block_slug": "mortal-flaws",
+            "section_type": "trait_list",
+            "title": "Mortal Flaws",
+            "column": 1,
+            "order": 27,
+            "span": 2,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        "Insomnia 2"
+                    ]
+                }
+            ]
+        }
+    ],
+    "prose": [],
+    "xp_history": [],
+    "provenance_lines": [
+        "01a11da7-7bf7-7a3d-a392-bebfe7374e2b",
+        "be-demo · 2026-10-13 · Beyond Elysium 1.6.0"
+    ]
+}
