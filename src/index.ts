@@ -21,7 +21,7 @@ if (applied.length > 0) {
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-client.once('ready', (readyClient) => {
+client.once('clientReady', (readyClient) => {
 	logger.info({ user: readyClient.user.tag }, 'logged in to Discord');
 });
 
