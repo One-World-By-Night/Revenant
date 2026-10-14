@@ -144,7 +144,7 @@ export const linksCommand = {
 				return renderLinksList(locale, status, links);
 			} catch (error) {
 				if (error instanceof BeApiError && error.httpStatus === 403) {
-					return { content: t(locale, 'links.forbidden'), components: [] };
+					return { content: t(locale, 'shared.storytellersOnly'), components: [] };
 				}
 				context.logger.warn({ guildId, error: error instanceof Error ? error.message : String(error) }, '/links failed');
 				return null;

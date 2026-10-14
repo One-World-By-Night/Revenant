@@ -10,6 +10,7 @@ import { linksCommand } from './links.js';
 import { characterCommand } from './character.js';
 import { sheetCommand } from './sheet.js';
 import { rollCommand } from './roll.js';
+import { settingsCommand } from './settings.js';
 
 export interface CommandContext {
 	pool: Pool;
@@ -32,6 +33,7 @@ export const commands: BotCommand[] = [
 	characterCommand,
 	sheetCommand,
 	rollCommand,
+	settingsCommand,
 ];
 
 /**

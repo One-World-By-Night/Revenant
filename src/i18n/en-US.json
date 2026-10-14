@@ -28,7 +28,7 @@
 	"unlink.cancelled": "Cancelled.",
 	"unlink.success": "You're unlinked.",
 	"unlink.error": "Couldn't unlink right now. Try again in a moment.",
-	"links.forbidden": "Only the chronicle's Storytellers can do that.",
+	"shared.storytellersOnly": "Only the chronicle's Storytellers can do that.",
 	"links.noneConfirmed": "No requests are waiting for an answer.",
 	"links.noneApproved": "No links are approved yet.",
 	"links.row": "**{username}** ({characters})",
@@ -52,5 +52,10 @@
 	"sheet.previousButton": "Previous",
 	"sheet.nextButton": "Next",
 	"roll.bothGiven": "Give either `dice` or `pool`, not both.",
-	"roll.neitherGiven": "Give either `dice` or `pool`."
+	"roll.neitherGiven": "Give either `dice` or `pool`.",
+	"settings.summary": "**Pool rules:** {poolRules}\n**Staff channel:** {staffChannel}\n**Language:** {language}",
+	"settings.none": "not set",
+	"settings.languageDefault": "the server's Discord language",
+	"settings.updated": "Settings updated.\n\n{summary}",
+	"settings.staffChannelUnreachable": "I can't post in {channel}. Check my permissions there and try again."
 }

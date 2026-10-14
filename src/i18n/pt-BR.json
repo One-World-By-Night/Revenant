@@ -28,7 +28,7 @@
 	"unlink.cancelled": "Cancelado.",
 	"unlink.success": "Você está desvinculado.",
 	"unlink.error": "Não foi possível desvincular agora. Tente de novo em instantes.",
-	"links.forbidden": "Só os Storytellers da crônica podem fazer isso.",
+	"shared.storytellersOnly": "Só os Storytellers da crônica podem fazer isso.",
 	"links.noneConfirmed": "Nenhum pedido está esperando resposta.",
 	"links.noneApproved": "Nenhum vínculo está aprovado ainda.",
 	"links.row": "**{username}** ({characters})",
@@ -52,5 +52,10 @@
 	"sheet.previousButton": "Anterior",
 	"sheet.nextButton": "Próximo",
 	"roll.bothGiven": "Informe `dice` ou `pool`, não os dois.",
-	"roll.neitherGiven": "Informe `dice` ou `pool`."
+	"roll.neitherGiven": "Informe `dice` ou `pool`.",
+	"settings.summary": "**Regras de reserva:** {poolRules}\n**Canal da equipe:** {staffChannel}\n**Idioma:** {language}",
+	"settings.none": "não definido",
+	"settings.languageDefault": "o idioma do Discord do servidor",
+	"settings.updated": "Configurações atualizadas.\n\n{summary}",
+	"settings.staffChannelUnreachable": "Não consigo postar em {channel}. Verifique minhas permissões lá e tente de novo."
 }
