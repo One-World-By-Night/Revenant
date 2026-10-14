@@ -3,7 +3,7 @@ import type { CommandContext } from './registry.js';
 import { discoverRestRoot } from '../be/discover.js';
 import { callBe, BeApiError } from '../be/client.js';
 import { encrypt } from '../crypto/secretBox.js';
-import { t, resolveLocale } from '../i18n/index.js';
+import { t, resolveLocale, resolvePublicLocale } from '../i18n/index.js';
 
 interface ConnectResponse {
 	connection_id: number;
@@ -121,18 +121,22 @@ export const connectCommand = {
 			[guildId, site, result.rest_root, result.connection_id, secretEnc, result.game.slug, result.game.name, result.be_version, interaction.user.id]
 		);
 
-		const successMessage = t(locale, 'connect.success', { gameName: result.game.name });
-		await interaction.editReply(successMessage);
+		await interaction.editReply(t(locale, 'connect.success', { gameName: result.game.name }));
 
-		const settings = await context.pool.query<{ staff_channel_id: string | null }>(
-			'SELECT staff_channel_id FROM guild_settings WHERE guild_id = $1',
+		const settings = await context.pool.query<{ staff_channel_id: string | null; locale: string | null }>(
+			'SELECT staff_channel_id, locale FROM guild_settings WHERE guild_id = $1',
 			[guildId]
 		);
 		const staffChannelId = settings.rows[0]?.staff_channel_id;
 		if (staffChannelId) {
 			const channel = await interaction.guild?.channels.fetch(staffChannelId).catch(() => null);
 			if (channel?.isTextBased()) {
-				await channel.send(successMessage);
+				const publicLocale = resolvePublicLocale(
+					settings.rows[0]?.locale ?? null,
+					interaction.guild?.preferredLocale ?? null,
+					context.config.defaultLocale
+				);
+				await channel.send(t(publicLocale, 'connect.success', { gameName: result.game.name }));
 			}
 		}
 	},

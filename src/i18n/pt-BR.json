@@ -50,5 +50,7 @@
 	"sheet.publicOwnOnly": "Você só pode publicar a ficha de um personagem quando é o seu próprio.",
 	"sheet.postedPublicly": "Publicado no canal.",
 	"sheet.previousButton": "Anterior",
-	"sheet.nextButton": "Próximo"
+	"sheet.nextButton": "Próximo",
+	"roll.bothGiven": "Informe `dice` ou `pool`, não os dois.",
+	"roll.neitherGiven": "Informe `dice` ou `pool`."
 }

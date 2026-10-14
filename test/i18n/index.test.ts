@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { t, messageKeys, placeholdersIn, resolveLocale } from '../../src/i18n/index.js';
+import { t, messageKeys, placeholdersIn, resolveLocale, resolvePublicLocale } from '../../src/i18n/index.js';
 
 describe('t', () => {
 	it('returns a message with no placeholders', () => {
@@ -37,6 +37,23 @@ describe('resolveLocale', () => {
 		expect(resolveLocale('fr')).toBe('en-US');
 		expect(resolveLocale(null)).toBe('en-US');
 		expect(resolveLocale(undefined)).toBe('en-US');
+	});
+});
+
+describe('resolvePublicLocale', () => {
+	it('prefers the guild\'s own saved setting', () => {
+		expect(resolvePublicLocale('pt-BR', 'en-US', 'en-US')).toBe('pt-BR');
+		expect(resolvePublicLocale('en-US', 'pt-BR', 'pt-BR')).toBe('en-US');
+	});
+
+	it('falls back to the Discord guild locale when nothing is saved', () => {
+		expect(resolvePublicLocale(null, 'pt-BR', 'en-US')).toBe('pt-BR');
+		expect(resolvePublicLocale(null, 'fr', 'en-US')).toBe('en-US');
+	});
+
+	it('falls back to the configured default when neither is set', () => {
+		expect(resolvePublicLocale(null, null, 'pt-BR')).toBe('pt-BR');
+		expect(resolvePublicLocale(null, null, 'en-US')).toBe('en-US');
 	});
 });
 

@@ -50,5 +50,7 @@
 	"sheet.publicOwnOnly": "You can only post a character's sheet publicly when it's your own.",
 	"sheet.postedPublicly": "Posted in the channel.",
 	"sheet.previousButton": "Previous",
-	"sheet.nextButton": "Next"
+	"sheet.nextButton": "Next",
+	"roll.bothGiven": "Give either `dice` or `pool`, not both.",
+	"roll.neitherGiven": "Give either `dice` or `pool`."
 }

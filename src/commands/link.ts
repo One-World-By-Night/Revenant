@@ -2,7 +2,7 @@ import { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, type
 import type { CommandContext } from './registry.js';
 import { callBe } from '../be/client.js';
 import { decrypt } from '../crypto/secretBox.js';
-import { t, resolveLocale } from '../i18n/index.js';
+import { t, resolveLocale, resolvePublicLocale } from '../i18n/index.js';
 
 const STAFF_PING_THROTTLE_MS = 60 * 60 * 1000;
 
@@ -122,14 +122,19 @@ export const linkCommand = {
 			components: [row],
 		});
 
-		const settings = await context.pool.query<{ staff_channel_id: string | null }>(
-			'SELECT staff_channel_id FROM guild_settings WHERE guild_id = $1',
+		const settings = await context.pool.query<{ staff_channel_id: string | null; locale: string | null }>(
+			'SELECT staff_channel_id, locale FROM guild_settings WHERE guild_id = $1',
 			[guildId]
 		);
 		const staffChannelId = settings.rows[0]?.staff_channel_id;
 		if (!staffChannelId) {
 			return;
 		}
+		const publicLocale = resolvePublicLocale(
+			settings.rows[0]?.locale ?? null,
+			interaction.guild?.preferredLocale ?? null,
+			context.config.defaultLocale
+		);
 
 		const prefs = await context.pool.query<{ link_ping_at: Date | null }>(
 			'SELECT link_ping_at FROM user_prefs WHERE guild_id = $1 AND discord_user_id = $2',
@@ -142,7 +147,7 @@ export const linkCommand = {
 
 		const channel = await interaction.guild?.channels.fetch(staffChannelId).catch(() => null);
 		if (channel?.isTextBased()) {
-			await channel.send(t(locale, 'link.staffPing', { username: interaction.user.username }));
+			await channel.send(t(publicLocale, 'link.staffPing', { username: interaction.user.username }));
 		}
 
 		await context.pool.query(

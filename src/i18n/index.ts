@@ -60,3 +60,17 @@ export function placeholdersIn(locale: Locale, key: string): Set<string> {
 export function resolveLocale(discordLocale: string | null | undefined): Locale {
 	return discordLocale === 'pt-BR' ? 'pt-BR' : 'en-US';
 }
+
+/**
+ * The language a public, channel-visible post uses: the guild's own saved setting first, then
+ * Discord's guild preferred locale, then the bot's configured default.
+ */
+export function resolvePublicLocale(guildLocale: string | null, guildPreferredLocale: string | null, defaultLocale: Locale): Locale {
+	if (guildLocale !== null) {
+		return guildLocale === 'pt-BR' ? 'pt-BR' : 'en-US';
+	}
+	if (guildPreferredLocale === 'pt-BR') {
+		return 'pt-BR';
+	}
+	return defaultLocale;
+}
