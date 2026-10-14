@@ -233,6 +233,10 @@ export const sheetCommand = {
 		try {
 			doc = await fetchSheetDocument(connection, secret, interaction.user.id, characterId);
 		} catch (error) {
+			if (error instanceof BeApiError && error.kind === 'user_not_linked') {
+				await interaction.editReply(t(locale, 'shared.userNotLinked'));
+				return;
+			}
 			if (error instanceof BeApiError && error.httpStatus === 403) {
 				await interaction.editReply(t(locale, 'sheet.forbidden'));
 				return;

@@ -144,6 +144,9 @@ export const linksCommand = {
 				const links = await fetchList(connection, secret, interaction.user.id, status);
 				return renderLinksList(locale, status, links);
 			} catch (error) {
+				if (error instanceof BeApiError && error.kind === 'user_not_linked') {
+					return { content: t(locale, 'shared.userNotLinked'), components: [] };
+				}
 				if (error instanceof BeApiError && error.httpStatus === 403) {
 					return { content: t(locale, 'shared.storytellersOnly'), components: [] };
 				}
