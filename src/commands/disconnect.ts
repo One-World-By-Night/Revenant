@@ -4,6 +4,7 @@ import {
 	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
+	MessageFlags,
 	type ChatInputCommandInteraction,
 } from 'discord.js';
 import type { CommandContext } from './registry.js';
@@ -59,7 +60,7 @@ export const disconnectCommand = {
 		);
 		const connection = rows[0];
 		if (!connection) {
-			await interaction.reply({ content: t(locale, 'disconnect.notConnected'), ephemeral: true });
+			await interaction.reply({ content: t(locale, 'disconnect.notConnected'), flags: MessageFlags.Ephemeral });
 			return;
 		}
 
@@ -70,7 +71,7 @@ export const disconnectCommand = {
 		const reply = await interaction.reply({
 			content: t(locale, 'disconnect.confirmPrompt'),
 			components: [row],
-			ephemeral: true,
+			flags: MessageFlags.Ephemeral,
 			fetchReply: true,
 		});
 

@@ -1,4 +1,9 @@
-import { SlashCommandBuilder, type ChatInputCommandInteraction, type AutocompleteInteraction } from 'discord.js';
+import {
+	SlashCommandBuilder,
+	MessageFlags,
+	type ChatInputCommandInteraction,
+	type AutocompleteInteraction,
+} from 'discord.js';
 import type { CommandContext } from './registry.js';
 import { callBe } from '../be/client.js';
 import { decrypt } from '../crypto/secretBox.js';
@@ -102,7 +107,7 @@ export const characterCommand = {
 		}
 		const guildId = interaction.guildId;
 
-		await interaction.deferReply({ ephemeral: true });
+		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
 		const connection = await loadConnection(context, guildId);
 		if (!connection) {

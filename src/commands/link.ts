@@ -1,4 +1,11 @@
-import { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, type ChatInputCommandInteraction } from 'discord.js';
+import {
+	SlashCommandBuilder,
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	MessageFlags,
+	type ChatInputCommandInteraction,
+} from 'discord.js';
 import type { CommandContext } from './registry.js';
 import { callBe } from '../be/client.js';
 import { decrypt } from '../crypto/secretBox.js';
@@ -62,7 +69,7 @@ export const linkCommand = {
 		}
 		const guildId = interaction.guildId;
 
-		await interaction.deferReply({ ephemeral: true });
+		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
 		const { rows } = await context.pool.query<ConnectionRow>(
 			'SELECT be_connection_id, secret_enc, rest_root, game_slug, game_name FROM connections WHERE guild_id = $1',

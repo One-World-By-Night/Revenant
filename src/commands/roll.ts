@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, type ChatInputCommandInteraction } from 'discord.js';
+import { SlashCommandBuilder, MessageFlags, type ChatInputCommandInteraction } from 'discord.js';
 import type { CommandContext } from './registry.js';
 import { parseNotation } from '../dice/notation.js';
 import { rollNotation } from '../dice/roll.js';
@@ -121,11 +121,11 @@ export const rollCommand = {
 
 		const kind = classifyRollRequest(diceOption, poolOption);
 		if (kind === 'both') {
-			await interaction.reply({ content: t(locale, 'roll.bothGiven'), ephemeral: true });
+			await interaction.reply({ content: t(locale, 'roll.bothGiven'), flags: MessageFlags.Ephemeral });
 			return;
 		}
 		if (kind === 'neither') {
-			await interaction.reply({ content: t(locale, 'roll.neitherGiven'), ephemeral: true });
+			await interaction.reply({ content: t(locale, 'roll.neitherGiven'), flags: MessageFlags.Ephemeral });
 			return;
 		}
 
@@ -136,7 +136,7 @@ export const rollCommand = {
 		if (kind === 'dice') {
 			const parsed = parseNotation(diceOption as string);
 			if (!parsed.ok) {
-				await interaction.reply({ content: parsed.error, ephemeral: true });
+				await interaction.reply({ content: parsed.error, flags: MessageFlags.Ephemeral });
 				return;
 			}
 			const rolled = rollNotation(parsed.notation, createRng());
@@ -147,7 +147,7 @@ export const rollCommand = {
 			const difficulty = difficultyOption ?? DEFAULT_DIFFICULTY;
 			const validation = validatePool(poolOption as number, difficulty);
 			if (!validation.ok) {
-				await interaction.reply({ content: validation.error, ephemeral: true });
+				await interaction.reply({ content: validation.error, flags: MessageFlags.Ephemeral });
 				return;
 			}
 			const settings = await context.pool.query<{ pool_rules: PoolRules }>(

@@ -4,6 +4,7 @@ import {
 	ButtonBuilder,
 	ButtonStyle,
 	ComponentType,
+	MessageFlags,
 	type ChatInputCommandInteraction,
 	type ButtonInteraction,
 } from 'discord.js';
@@ -123,7 +124,7 @@ export const linksCommand = {
 		const guildId = interaction.guildId;
 		const status = (interaction.options.getString('status') ?? 'confirmed') as LinksStatus;
 
-		await interaction.deferReply({ ephemeral: true });
+		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
 		const { rows } = await context.pool.query<ConnectionRow>(
 			'SELECT be_connection_id, secret_enc, rest_root, game_slug FROM connections WHERE guild_id = $1',

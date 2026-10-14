@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, PermissionFlagsBits, type ChatInputCommandInteraction } from 'discord.js';
+import { SlashCommandBuilder, PermissionFlagsBits, MessageFlags, type ChatInputCommandInteraction } from 'discord.js';
 import type { CommandContext } from './registry.js';
 import { discoverRestRoot } from '../be/discover.js';
 import { callBe, BeApiError } from '../be/client.js';
@@ -70,11 +70,11 @@ export const connectCommand = {
 		const locale = resolveLocale(interaction.locale);
 
 		if (!interaction.inGuild() || !interaction.guildId) {
-			await interaction.reply({ content: t(locale, 'connect.unreachable', { site: '' }), ephemeral: true });
+			await interaction.reply({ content: t(locale, 'connect.unreachable', { site: '' }), flags: MessageFlags.Ephemeral });
 			return;
 		}
 
-		await interaction.deferReply({ ephemeral: true });
+		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 		const guildId = interaction.guildId;
 
 		const existing = await context.pool.query('SELECT guild_id FROM connections WHERE guild_id = $1', [guildId]);

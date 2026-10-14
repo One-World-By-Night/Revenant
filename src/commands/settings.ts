@@ -2,6 +2,7 @@ import {
 	SlashCommandBuilder,
 	ChannelType,
 	PermissionFlagsBits,
+	MessageFlags,
 	type ChatInputCommandInteraction,
 	type TextChannel,
 } from 'discord.js';
@@ -125,11 +126,11 @@ export const settingsCommand = {
 
 		const connection = await loadConnection(context, guildId);
 		if (!connection) {
-			await interaction.reply({ content: t(locale, 'disconnect.notConnected'), ephemeral: true });
+			await interaction.reply({ content: t(locale, 'disconnect.notConnected'), flags: MessageFlags.Ephemeral });
 			return;
 		}
 
-		await interaction.deferReply({ ephemeral: true });
+		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 		const secret = decrypt(connection.secret_enc, context.config.secretKey);
 
 		let capabilities: { capabilities: Record<string, boolean> };

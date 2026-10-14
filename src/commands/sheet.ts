@@ -4,6 +4,7 @@ import {
 	ButtonBuilder,
 	ButtonStyle,
 	ComponentType,
+	MessageFlags,
 	type ChatInputCommandInteraction,
 	type AutocompleteInteraction,
 	type APIEmbed,
@@ -192,7 +193,7 @@ export const sheetCommand = {
 
 		const connection = await loadConnection(context, guildId);
 		if (!connection) {
-			await interaction.reply({ content: t(locale, 'disconnect.notConnected'), ephemeral: true });
+			await interaction.reply({ content: t(locale, 'disconnect.notConnected'), flags: MessageFlags.Ephemeral });
 			return;
 		}
 
@@ -200,7 +201,7 @@ export const sheetCommand = {
 		const sectionOption = interaction.options.getString('section');
 		const publicRequested = interaction.options.getBoolean('public') ?? false;
 
-		await interaction.deferReply({ ephemeral: true });
+		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 		const secret = decrypt(connection.secret_enc, context.config.secretKey);
 
 		let characterId: number;
