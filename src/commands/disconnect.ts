@@ -68,12 +68,13 @@ export const disconnectCommand = {
 			new ButtonBuilder().setCustomId(CONFIRM_ID).setLabel(t(locale, 'disconnect.confirmButton')).setStyle(ButtonStyle.Danger),
 			new ButtonBuilder().setCustomId(CANCEL_ID).setLabel(t(locale, 'disconnect.cancelButton')).setStyle(ButtonStyle.Secondary)
 		);
-		const reply = await interaction.reply({
+		const response = await interaction.reply({
 			content: t(locale, 'disconnect.confirmPrompt'),
 			components: [row],
 			flags: MessageFlags.Ephemeral,
-			fetchReply: true,
+			withResponse: true,
 		});
+		const reply = response.resource!.message!;
 
 		let buttonInteraction;
 		try {

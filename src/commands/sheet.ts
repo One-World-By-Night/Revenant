@@ -273,7 +273,7 @@ export const sheetCommand = {
 		const message = publicRequested
 			? await (async () => {
 					await interaction.editReply(t(locale, 'sheet.postedPublicly'));
-					return interaction.followUp({ embeds: firstPage, components, fetchReply: true });
+					return interaction.followUp({ embeds: firstPage, components });
 				})()
 			: await interaction.editReply({ embeds: firstPage, components });
 
