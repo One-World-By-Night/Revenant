@@ -134,5 +134,14 @@
 	"challenge.negativeTraitChoicePrompt": "Aposte um Trait extra, ou ceda?",
 	"challenge.bidExtraTraitButton": "Apostar um Trait extra",
 	"challenge.extraTraitModalTitle": "Seu Trait extra",
-	"challenge.fieldExtraTraitName": "O Trait extra que você aposta"
+	"challenge.fieldExtraTraitName": "O Trait extra que você aposta",
+	"challenge.loserChoicePrompt": "{loser} perdeu esta jogada. Aceitar a perda, ou sobrepujar por outra?",
+	"challenge.acceptLossButton": "Aceitar a perda",
+	"challenge.overbidButton": "Sobrepujar",
+	"challenge.overbidModalTitle": "Sua sobrepuja",
+	"challenge.fieldOverbidCount": "Sua contagem de Traits declarada",
+	"challenge.fieldOverbidTrait": "O novo Trait que você aposta",
+	"challenge.overbidTooLow": "Essa contagem não é pelo menos o dobro da contagem declarada pelo oponente. Tente de novo.",
+	"challenge.overbidAccepted": "Sobrepuja aceita. Jogue de novo.",
+	"challenge.overbidThrown": "A sobrepuja foi aceita. Jogando de novo."
 }

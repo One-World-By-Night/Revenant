@@ -134,5 +134,14 @@
 	"challenge.negativeTraitChoicePrompt": "Bid an extra Trait, or relent?",
 	"challenge.bidExtraTraitButton": "Bid an extra Trait",
 	"challenge.extraTraitModalTitle": "Your extra Trait",
-	"challenge.fieldExtraTraitName": "The extra Trait you bid"
+	"challenge.fieldExtraTraitName": "The extra Trait you bid",
+	"challenge.loserChoicePrompt": "{loser} lost this throw. Accept the loss, or overbid for another?",
+	"challenge.acceptLossButton": "Accept the loss",
+	"challenge.overbidButton": "Overbid",
+	"challenge.overbidModalTitle": "Your overbid",
+	"challenge.fieldOverbidCount": "Your claimed Trait count",
+	"challenge.fieldOverbidTrait": "The new Trait you bid",
+	"challenge.overbidTooLow": "That count isn't at least double the opponent's claimed count. Try again.",
+	"challenge.overbidAccepted": "Overbid accepted. Throw again.",
+	"challenge.overbidThrown": "The overbid was accepted. Throwing again."
 }

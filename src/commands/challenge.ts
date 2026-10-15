@@ -25,6 +25,10 @@ import {
 	validateGesture,
 	callNegativeTrait,
 	bidNegativeTraitResponse,
+	validateOverbid,
+	submitOverbid,
+	latestThrow,
+	otherSide,
 	settle,
 	settleRelent,
 	type Terms,
@@ -46,6 +50,9 @@ const NEGATIVE_TRAIT_NO_ID = 'challenge:negativeTrait:no';
 const NEGATIVE_TRAIT_BID_ID = 'challenge:negativeTrait:bid';
 const NEGATIVE_TRAIT_RELENT_ID = 'challenge:negativeTrait:relent';
 const EXTRA_TRAIT_MODAL_ID = 'challenge:negativeTrait:extraTraitModal';
+const LOSER_ACCEPT_ID = 'challenge:loser:accept';
+const LOSER_OVERBID_ID = 'challenge:loser:overbid';
+const OVERBID_MODAL_ID = 'challenge:overbid:modal';
 const GESTURES: Gesture[] = ['rock', 'paper', 'scissors', 'bomb'];
 const GESTURE_LABEL_KEY: Record<Gesture, string> = {
 	rock: 'challenge.gestureRock',
@@ -192,6 +199,27 @@ function extraTraitModal(locale: Locale): ModalBuilder {
 		.addComponents(
 			new ActionRowBuilder<TextInputBuilder>().addComponents(
 				new TextInputBuilder().setCustomId('extra_trait_name').setLabel(t(locale, 'challenge.fieldExtraTraitName')).setStyle(TextInputStyle.Short).setRequired(true)
+			)
+		);
+}
+
+function loserChoiceRow(locale: Locale): ActionRowBuilder<ButtonBuilder> {
+	return new ActionRowBuilder<ButtonBuilder>().addComponents(
+		new ButtonBuilder().setCustomId(LOSER_ACCEPT_ID).setLabel(t(locale, 'challenge.acceptLossButton')).setStyle(ButtonStyle.Secondary),
+		new ButtonBuilder().setCustomId(LOSER_OVERBID_ID).setLabel(t(locale, 'challenge.overbidButton')).setStyle(ButtonStyle.Primary)
+	);
+}
+
+function overbidModal(locale: Locale): ModalBuilder {
+	return new ModalBuilder()
+		.setCustomId(OVERBID_MODAL_ID)
+		.setTitle(t(locale, 'challenge.overbidModalTitle'))
+		.addComponents(
+			new ActionRowBuilder<TextInputBuilder>().addComponents(
+				new TextInputBuilder().setCustomId('overbid_count').setLabel(t(locale, 'challenge.fieldOverbidCount')).setStyle(TextInputStyle.Short).setRequired(true)
+			),
+			new ActionRowBuilder<TextInputBuilder>().addComponents(
+				new TextInputBuilder().setCustomId('overbid_trait').setLabel(t(locale, 'challenge.fieldOverbidTrait')).setStyle(TextInputStyle.Short).setRequired(true)
 			)
 		);
 }
@@ -355,6 +383,63 @@ export const challengeCommand = {
 			collector.stop();
 		}
 
+		async function presentLoserChoice(state: ChallengeState, loserSide: Side): Promise<void> {
+			if (!message.channel.isSendable()) {
+				return;
+			}
+			const loserDiscordId = loserSide === 'challenger' ? interaction.user.id : opponentUser.id;
+			const loserName = loserSide === 'challenger' ? challengerActive!.name : defenderActive!.name;
+			const promptText = t(locale, 'challenge.loserChoicePrompt', { loser: loserName });
+			const prompt = await message.channel.send({ content: promptText, components: [loserChoiceRow(locale)] });
+
+			let choice: ButtonInteraction;
+			try {
+				choice = await prompt.awaitMessageComponent({
+					componentType: ComponentType.Button,
+					filter: (i) => i.user.id === loserDiscordId,
+					time: settings.challenge_timeout_minutes * 60 * 1000,
+				});
+			} catch {
+				await prompt.edit({ content: `${promptText}\n\n${t(locale, 'challenge.negativeTraitTimedOut')}`, components: [] }).catch(() => undefined);
+				return;
+			}
+
+			if (choice.customId === LOSER_ACCEPT_ID) {
+				await choice.deferUpdate();
+				await prompt.edit({ components: [] }).catch(() => undefined);
+				await settleAndReport(state, settle(state));
+				return;
+			}
+
+			await choice.showModal(overbidModal(locale));
+			let overbidSubmission: ModalSubmitInteraction;
+			try {
+				overbidSubmission = await choice.awaitModalSubmit({
+					filter: (i) => i.customId === OVERBID_MODAL_ID && i.user.id === loserDiscordId,
+					time: 5 * 60 * 1000,
+				});
+			} catch {
+				return;
+			}
+
+			const overbidCount = Number(overbidSubmission.fields.getTextInputValue('overbid_count'));
+			const overbidTrait = overbidSubmission.fields.getTextInputValue('overbid_trait').trim();
+			const overbidCheck = validateOverbid(state, Number.isFinite(overbidCount) ? overbidCount : 0);
+			if (!overbidCheck.ok) {
+				await overbidSubmission.reply({ content: t(locale, 'challenge.overbidTooLow'), flags: MessageFlags.Ephemeral });
+				return;
+			}
+			traitLocations.push({ trait: overbidTrait, blockSlug: '' });
+
+			const withOverbid = submitOverbid(state, loserSide, overbidTrait);
+			withOverbid.challenger.gesture = null;
+			withOverbid.defender.gesture = null;
+			await saveChallenge(context.pool, challenge.id, withOverbid, 'overbid');
+			await overbidSubmission.reply({ content: t(locale, 'challenge.overbidAccepted'), flags: MessageFlags.Ephemeral });
+			await prompt.edit({ content: `${promptText}\n\n${t(locale, 'challenge.overbidThrown')}`, components: [] }).catch(() => undefined);
+			await message.edit({ components: [throwRow(locale, true)] }).catch(() => undefined);
+		}
+
 		async function handleThrow(buttonInteraction: ButtonInteraction, gesture: Gesture): Promise<void> {
 			const current = await loadChallenge(context.pool, challenge.id);
 			if (!current) {
@@ -375,21 +460,27 @@ export const challengeCommand = {
 				return;
 			}
 
+			const isOverbidRound = current.status === 'overbid';
 			let next = current.state;
 			next[side] = { ...next[side], gesture };
-			const otherGesture = next[side === 'challenger' ? 'defender' : 'challenger'].gesture;
+			const otherGesture = next[otherSide(side)].gesture;
 			await buttonInteraction.reply({ content: t(locale, 'challenge.gestureRecorded'), flags: MessageFlags.Ephemeral });
 
 			if (otherGesture === null) {
-				await saveChallenge(context.pool, challenge.id, next, 'throwing');
+				await saveChallenge(context.pool, challenge.id, next, isOverbidRound ? 'overbid' : 'throwing');
 				return;
 			}
 
 			const challengerGesture = side === 'challenger' ? gesture : (otherGesture as Gesture);
 			const defenderGesture = side === 'defender' ? gesture : (otherGesture as Gesture);
-			next = throwGestures(next, challengerGesture, defenderGesture);
-			const outcome = settle(next);
-			await settleAndReport(next, outcome);
+			const thrown = throwGestures(next, challengerGesture, defenderGesture, isOverbidRound ? 'overbid' : 'initial');
+			const last = latestThrow(thrown)!;
+			if (last.winner === 'draw') {
+				await settleAndReport(thrown, settle(thrown));
+				return;
+			}
+			await saveChallenge(context.pool, challenge.id, thrown, 'resolved');
+			await presentLoserChoice(thrown, otherSide(last.winner));
 		}
 
 		async function handleClaim(buttonInteraction: ButtonInteraction): Promise<void> {
