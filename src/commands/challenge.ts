@@ -3,6 +3,7 @@ import {
 	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
+	ComponentType,
 	ModalBuilder,
 	TextInputBuilder,
 	TextInputStyle,
@@ -16,12 +17,14 @@ import { decrypt } from '../crypto/secretBox.js';
 import { t, resolvePublicLocale, type Locale } from '../i18n/index.js';
 import { activeCharacterFor, type ActiveCharacter } from '../challenges/activeCharacter.js';
 import { loadGuildSettings } from './settings.js';
-import { createChallenge, loadChallenge, settleChallenge, recordCost, type ChallengeRow } from '../challenges/store.js';
+import { createChallenge, loadChallenge, saveChallenge, settleChallenge, recordCost, type ChallengeRow } from '../challenges/store.js';
 import {
 	submitClaim,
 	validateClaim,
 	throwGestures,
 	validateGesture,
+	callNegativeTrait,
+	bidNegativeTraitResponse,
 	settle,
 	settleRelent,
 	type Terms,
@@ -36,6 +39,13 @@ import type { Connection } from '../be/temporaryState.js';
 
 const TERMS_MODAL_ID = 'challenge:terms';
 const CLAIM_MODAL_PREFIX = 'challenge:claim:';
+const NEGATIVE_TRAIT_CALL_ID = 'challenge:negativeTrait:call';
+const NEGATIVE_TRAIT_MODAL_ID = 'challenge:negativeTrait:modal';
+const NEGATIVE_TRAIT_YES_ID = 'challenge:negativeTrait:yes';
+const NEGATIVE_TRAIT_NO_ID = 'challenge:negativeTrait:no';
+const NEGATIVE_TRAIT_BID_ID = 'challenge:negativeTrait:bid';
+const NEGATIVE_TRAIT_RELENT_ID = 'challenge:negativeTrait:relent';
+const EXTRA_TRAIT_MODAL_ID = 'challenge:negativeTrait:extraTraitModal';
 const GESTURES: Gesture[] = ['rock', 'paper', 'scissors', 'bomb'];
 const GESTURE_LABEL_KEY: Record<Gesture, string> = {
 	rock: 'challenge.gestureRock',
@@ -142,6 +152,48 @@ function throwRow(locale: Locale, offerBomb: boolean): ActionRowBuilder<ButtonBu
 		row.addComponents(new ButtonBuilder().setCustomId('challenge:throw:bomb').setLabel(t(locale, GESTURE_LABEL_KEY.bomb)).setStyle(ButtonStyle.Danger));
 	}
 	return row;
+}
+
+function negativeTraitRow(locale: Locale): ActionRowBuilder<ButtonBuilder> {
+	return new ActionRowBuilder<ButtonBuilder>().addComponents(
+		new ButtonBuilder().setCustomId(NEGATIVE_TRAIT_CALL_ID).setLabel(t(locale, 'challenge.negativeTraitButton')).setStyle(ButtonStyle.Secondary)
+	);
+}
+
+function negativeTraitModal(locale: Locale): ModalBuilder {
+	return new ModalBuilder()
+		.setCustomId(NEGATIVE_TRAIT_MODAL_ID)
+		.setTitle(t(locale, 'challenge.negativeTraitModalTitle'))
+		.addComponents(
+			new ActionRowBuilder<TextInputBuilder>().addComponents(
+				new TextInputBuilder().setCustomId('negative_trait_name').setLabel(t(locale, 'challenge.fieldNegativeTraitName')).setStyle(TextInputStyle.Short).setRequired(true)
+			)
+		);
+}
+
+function negativeTraitAnswerRow(locale: Locale): ActionRowBuilder<ButtonBuilder> {
+	return new ActionRowBuilder<ButtonBuilder>().addComponents(
+		new ButtonBuilder().setCustomId(NEGATIVE_TRAIT_YES_ID).setLabel(t(locale, 'challenge.negativeTraitYesButton')).setStyle(ButtonStyle.Danger),
+		new ButtonBuilder().setCustomId(NEGATIVE_TRAIT_NO_ID).setLabel(t(locale, 'challenge.negativeTraitNoButton')).setStyle(ButtonStyle.Secondary)
+	);
+}
+
+function negativeTraitChoiceRow(locale: Locale): ActionRowBuilder<ButtonBuilder> {
+	return new ActionRowBuilder<ButtonBuilder>().addComponents(
+		new ButtonBuilder().setCustomId(NEGATIVE_TRAIT_BID_ID).setLabel(t(locale, 'challenge.bidExtraTraitButton')).setStyle(ButtonStyle.Primary),
+		new ButtonBuilder().setCustomId(NEGATIVE_TRAIT_RELENT_ID).setLabel(t(locale, 'challenge.relentButton')).setStyle(ButtonStyle.Danger)
+	);
+}
+
+function extraTraitModal(locale: Locale): ModalBuilder {
+	return new ModalBuilder()
+		.setCustomId(EXTRA_TRAIT_MODAL_ID)
+		.setTitle(t(locale, 'challenge.extraTraitModalTitle'))
+		.addComponents(
+			new ActionRowBuilder<TextInputBuilder>().addComponents(
+				new TextInputBuilder().setCustomId('extra_trait_name').setLabel(t(locale, 'challenge.fieldExtraTraitName')).setStyle(TextInputStyle.Short).setRequired(true)
+			)
+		);
 }
 
 function characterOf(side: Side, challenger: ActiveCharacter, defender: ActiveCharacter, challengerDiscordId: string, defenderDiscordId: string) {
@@ -329,7 +381,6 @@ export const challengeCommand = {
 			await buttonInteraction.reply({ content: t(locale, 'challenge.gestureRecorded'), flags: MessageFlags.Ephemeral });
 
 			if (otherGesture === null) {
-				const { saveChallenge } = await import('../challenges/store.js');
 				await saveChallenge(context.pool, challenge.id, next, 'throwing');
 				return;
 			}
@@ -386,14 +437,132 @@ export const challengeCommand = {
 
 			const next = submitClaim(current.state, side, claim);
 			const otherClaim = next[side === 'challenger' ? 'defender' : 'challenger'].claim;
-			const { saveChallenge } = await import('../challenges/store.js');
 			await saveChallenge(context.pool, challenge.id, next, otherClaim === null ? 'claiming' : 'throwing');
 
 			await claimSubmission.reply({ content: t(locale, 'challenge.claimRecorded'), flags: MessageFlags.Ephemeral });
 
 			if (otherClaim !== null) {
-				await message.edit({ components: [throwRow(locale, true)] }).catch(() => undefined);
+				await message.edit({ components: [negativeTraitRow(locale), throwRow(locale, true)] }).catch(() => undefined);
 			}
+		}
+
+		async function handleNegativeTraitCall(buttonInteraction: ButtonInteraction): Promise<void> {
+			const current = await loadChallenge(context.pool, challenge.id);
+			if (!current) {
+				return;
+			}
+			const side = sideFor(current, buttonInteraction.user.id);
+			if (side !== 'challenger') {
+				await buttonInteraction.reply({ content: t(locale, 'challenge.notYourChallenge'), flags: MessageFlags.Ephemeral });
+				return;
+			}
+			if (current.state.negativeTrait !== null) {
+				await buttonInteraction.reply({ content: t(locale, 'challenge.negativeTraitAlreadyCalled'), flags: MessageFlags.Ephemeral });
+				return;
+			}
+
+			await buttonInteraction.showModal(negativeTraitModal(locale));
+			let modalSubmission: ModalSubmitInteraction;
+			try {
+				modalSubmission = await buttonInteraction.awaitModalSubmit({
+					filter: (i) => i.customId === NEGATIVE_TRAIT_MODAL_ID && i.user.id === buttonInteraction.user.id,
+					time: 5 * 60 * 1000,
+				});
+			} catch {
+				return;
+			}
+			const trait = modalSubmission.fields.getTextInputValue('negative_trait_name').trim();
+			await modalSubmission.reply({ content: t(locale, 'challenge.negativeTraitWaiting'), flags: MessageFlags.Ephemeral });
+
+			if (!message.channel.isSendable()) {
+				return;
+			}
+			const promptText = t(locale, 'challenge.negativeTraitPrompt', { challenger: challengerActive!.name, defender: defenderActive!.name, trait });
+			const prompt = await message.channel.send({ content: promptText, components: [negativeTraitAnswerRow(locale)] });
+
+			let answer: ButtonInteraction;
+			try {
+				answer = await prompt.awaitMessageComponent({
+					componentType: ComponentType.Button,
+					filter: (i) => i.user.id === opponentUser.id,
+					time: settings.challenge_timeout_minutes * 60 * 1000,
+				});
+			} catch {
+				await prompt.edit({ content: `${promptText}\n\n${t(locale, 'challenge.negativeTraitTimedOut')}`, components: [] }).catch(() => undefined);
+				return;
+			}
+
+			const beforeAnswer = await loadChallenge(context.pool, challenge.id);
+			if (!beforeAnswer) {
+				return;
+			}
+
+			if (answer.customId === NEGATIVE_TRAIT_NO_ID) {
+				const next = callNegativeTrait(beforeAnswer.state, trait, false);
+				await saveChallenge(context.pool, challenge.id, next, 'throwing');
+				await answer.update({
+					content: `${promptText}\n\n${t(locale, 'challenge.negativeTraitDenied', { defender: defenderActive!.name, trait, challenger: challengerActive!.name })}`,
+					components: [],
+				});
+				await message.edit({ components: [throwRow(locale, true)] }).catch(() => undefined);
+				return;
+			}
+
+			const withCall = callNegativeTrait(beforeAnswer.state, trait, true);
+			await saveChallenge(context.pool, challenge.id, withCall, 'negative_trait');
+			await answer.update({
+				content: `${promptText}\n\n${t(locale, 'challenge.negativeTraitConfirmed', { defender: defenderActive!.name, trait })}`,
+				components: [],
+			});
+
+			const choiceMessage = await answer.followUp({
+				content: t(locale, 'challenge.negativeTraitChoicePrompt'),
+				components: [negativeTraitChoiceRow(locale)],
+				flags: MessageFlags.Ephemeral,
+			});
+
+			let choice: ButtonInteraction;
+			try {
+				choice = await choiceMessage.awaitMessageComponent({
+					componentType: ComponentType.Button,
+					filter: (i) => i.user.id === opponentUser.id,
+					time: 5 * 60 * 1000,
+				});
+			} catch {
+				return;
+			}
+
+			if (choice.customId === NEGATIVE_TRAIT_RELENT_ID) {
+				await choice.deferUpdate();
+				const latestForRelent = await loadChallenge(context.pool, challenge.id);
+				if (!latestForRelent) {
+					return;
+				}
+				await settleAndReport(latestForRelent.state, settleRelent('defender'));
+				return;
+			}
+
+			await choice.showModal(extraTraitModal(locale));
+			let extraSubmission: ModalSubmitInteraction;
+			try {
+				extraSubmission = await choice.awaitModalSubmit({
+					filter: (i) => i.customId === EXTRA_TRAIT_MODAL_ID && i.user.id === opponentUser.id,
+					time: 5 * 60 * 1000,
+				});
+			} catch {
+				return;
+			}
+			const extraTrait = extraSubmission.fields.getTextInputValue('extra_trait_name').trim();
+			traitLocations.push({ trait: extraTrait, blockSlug: '' });
+
+			const latestForBid = await loadChallenge(context.pool, challenge.id);
+			if (!latestForBid) {
+				return;
+			}
+			const withBid = bidNegativeTraitResponse(latestForBid.state, extraTrait);
+			await saveChallenge(context.pool, challenge.id, withBid, 'throwing');
+			await extraSubmission.reply({ content: t(locale, 'challenge.claimRecorded'), flags: MessageFlags.Ephemeral });
+			await message.edit({ components: [throwRow(locale, true)] }).catch(() => undefined);
 		}
 
 		async function handleRelent(buttonInteraction: ButtonInteraction): Promise<void> {
@@ -421,7 +590,6 @@ export const challengeCommand = {
 				await buttonInteraction.reply({ content: t(locale, 'challenge.notYourChallenge'), flags: MessageFlags.Ephemeral });
 				return;
 			}
-			const { saveChallenge } = await import('../challenges/store.js');
 			await saveChallenge(context.pool, challenge.id, current.state, 'disputed');
 			await buttonInteraction.reply({ content: t(locale, 'challenge.disputed') });
 
@@ -442,6 +610,8 @@ export const challengeCommand = {
 				void handleDispute(buttonInteraction);
 			} else if (buttonInteraction.customId === 'challenge:claim') {
 				void handleClaim(buttonInteraction);
+			} else if (buttonInteraction.customId === NEGATIVE_TRAIT_CALL_ID) {
+				void handleNegativeTraitCall(buttonInteraction);
 			} else if (buttonInteraction.customId.startsWith('challenge:throw:')) {
 				const gesture = buttonInteraction.customId.slice('challenge:throw:'.length) as Gesture;
 				if (GESTURES.includes(gesture)) {

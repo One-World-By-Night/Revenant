@@ -119,5 +119,20 @@
 	"challenge.gesturesRevealed": "{challengerName} jogou {challengerGesture}, {defenderName} jogou {defenderGesture}.",
 	"challenge.categoryPhysical": "Físico",
 	"challenge.categorySocial": "Social",
-	"challenge.categoryMental": "Mental"
+	"challenge.categoryMental": "Mental",
+	"challenge.negativeTraitButton": "Chamar um Trait Negativo",
+	"challenge.negativeTraitAlreadyCalled": "Um Trait Negativo já foi chamado neste desafio.",
+	"challenge.negativeTraitModalTitle": "Nomeie o Trait Negativo",
+	"challenge.fieldNegativeTraitName": "Trait Negativo",
+	"challenge.negativeTraitWaiting": "Esperando a resposta do outro lado.",
+	"challenge.negativeTraitPrompt": "{challenger} chama um Trait Negativo de {defender}: **{trait}**. {defender} tem esse Trait?",
+	"challenge.negativeTraitYesButton": "Sim, eu tenho",
+	"challenge.negativeTraitNoButton": "Não, eu não tenho",
+	"challenge.negativeTraitTimedOut": "Nenhuma resposta chegou a tempo.",
+	"challenge.negativeTraitDenied": "{defender} não tem **{trait}**. {challenger} aposta um Trait extra pelo palpite errado.",
+	"challenge.negativeTraitConfirmed": "{defender} tem **{trait}**.",
+	"challenge.negativeTraitChoicePrompt": "Aposte um Trait extra, ou ceda?",
+	"challenge.bidExtraTraitButton": "Apostar um Trait extra",
+	"challenge.extraTraitModalTitle": "Seu Trait extra",
+	"challenge.fieldExtraTraitName": "O Trait extra que você aposta"
 }

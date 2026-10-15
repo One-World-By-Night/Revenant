@@ -119,5 +119,20 @@
 	"challenge.gesturesRevealed": "{challengerName} threw {challengerGesture}, {defenderName} threw {defenderGesture}.",
 	"challenge.categoryPhysical": "Physical",
 	"challenge.categorySocial": "Social",
-	"challenge.categoryMental": "Mental"
+	"challenge.categoryMental": "Mental",
+	"challenge.negativeTraitButton": "Call a Negative Trait",
+	"challenge.negativeTraitAlreadyCalled": "A Negative Trait was already called this challenge.",
+	"challenge.negativeTraitModalTitle": "Name the Negative Trait",
+	"challenge.fieldNegativeTraitName": "Negative Trait",
+	"challenge.negativeTraitWaiting": "Waiting for the other side to answer.",
+	"challenge.negativeTraitPrompt": "{challenger} calls a Negative Trait on {defender}: **{trait}**. Does {defender} have it?",
+	"challenge.negativeTraitYesButton": "Yes, I have it",
+	"challenge.negativeTraitNoButton": "No, I don't",
+	"challenge.negativeTraitTimedOut": "No answer came in time.",
+	"challenge.negativeTraitDenied": "{defender} doesn't have **{trait}**. {challenger} bids an extra Trait for the wrong call.",
+	"challenge.negativeTraitConfirmed": "{defender} has **{trait}**.",
+	"challenge.negativeTraitChoicePrompt": "Bid an extra Trait, or relent?",
+	"challenge.bidExtraTraitButton": "Bid an extra Trait",
+	"challenge.extraTraitModalTitle": "Your extra Trait",
+	"challenge.fieldExtraTraitName": "The extra Trait you bid"
 }
