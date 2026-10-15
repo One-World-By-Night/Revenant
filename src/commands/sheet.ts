@@ -14,7 +14,7 @@ import { callBe, BeApiError } from '../be/client.js';
 import { decrypt } from '../crypto/secretBox.js';
 import { t, resolveLocale, type Locale } from '../i18n/index.js';
 import { buildSheetEmbeds, buildSingleSectionEmbed, paginateEmbeds, type SheetDocument } from '../render/sheet.js';
-import { matchingCharacters, type LinkedCharacter } from './character.js';
+import { matchingCharacters, activeCharacterId, type LinkedCharacter } from './character.js';
 import { createTtlCache } from '../lib/ttlCache.js';
 
 const PAGER_TIMEOUT_MS = 5 * 60 * 1000;
@@ -299,17 +299,6 @@ export const sheetCommand = {
 		});
 	},
 };
-
-async function activeCharacterId(context: CommandContext, interaction: ChatInputCommandInteraction | AutocompleteInteraction): Promise<number | null> {
-	if (!interaction.guildId) {
-		return null;
-	}
-	const prefs = await context.pool.query<{ active_character_id: number | null }>(
-		'SELECT active_character_id FROM user_prefs WHERE guild_id = $1 AND discord_user_id = $2',
-		[interaction.guildId, interaction.user.id]
-	);
-	return prefs.rows[0]?.active_character_id ?? null;
-}
 
 async function sectionTitles(connection: ConnectionRow, secret: Buffer, discordUserId: string, characterId: number): Promise<string[]> {
 	const cacheKey = `${discordUserId}:${characterId}`;

@@ -11,6 +11,12 @@ import { characterCommand } from './character.js';
 import { sheetCommand } from './sheet.js';
 import { rollCommand } from './roll.js';
 import { settingsCommand } from './settings.js';
+import { spendCommand } from './spend.js';
+import { regainCommand } from './regain.js';
+import { woundCommand } from './wound.js';
+import { healCommand } from './heal.js';
+import { statusCommand } from './status.js';
+import { nightCommand } from './night.js';
 
 export interface CommandContext {
 	pool: Pool;
@@ -34,6 +40,12 @@ export const commands: BotCommand[] = [
 	sheetCommand,
 	rollCommand,
 	settingsCommand,
+	spendCommand,
+	regainCommand,
+	woundCommand,
+	healCommand,
+	statusCommand,
+	nightCommand,
 ];
 
 /**
