@@ -1,0 +1,108 @@
+{
+    "title": "Fixture Capture Vampire",
+    "subtitle": "Vampire",
+    "header": [
+        [
+            "Printed",
+            "2026-10-15"
+        ],
+        [
+            "Last modified",
+            "2026-10-15"
+        ],
+        [
+            "Status",
+            "Active"
+        ],
+        [
+            "XP Earned",
+            "0"
+        ],
+        [
+            "XP Unspent",
+            "0"
+        ],
+        [
+            "Blood",
+            "x10 (7 temporary)",
+            10
+        ],
+        [
+            "Willpower",
+            "x6",
+            6
+        ],
+        [
+            "Morality",
+            "x7",
+            7
+        ]
+    ],
+    "portrait_path": null,
+    "style": {
+        "font_family": null,
+        "accent_color": null,
+        "background_color": null,
+        "text_color": null,
+        "background_image_path": null,
+        "section_graphics": []
+    },
+    "sections": [
+        {
+            "block_slug": "vampire-virtues",
+            "section_type": "resource_pool",
+            "title": "Virtues",
+            "column": 1,
+            "order": 4,
+            "span": 3,
+            "rows": [
+                {
+                    "text": "Conscience x1",
+                    "indent": 0,
+                    "circles": 1
+                },
+                {
+                    "text": "Self-Control x1",
+                    "indent": 0,
+                    "circles": 1
+                },
+                {
+                    "text": "Courage x1",
+                    "indent": 0,
+                    "circles": 1
+                }
+            ]
+        },
+        {
+            "block_slug": "vampire-abilities",
+            "section_type": "trait_list",
+            "title": "Vampire Abilities \u00b7 3",
+            "column": 1,
+            "order": 12,
+            "span": 3,
+            "groups": [
+                {
+                    "label": null,
+                    "rows": [
+                        {
+                            "text": "Brawl x3 (lost tonight)",
+                            "indent": 0,
+                            "circles": 3
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "prose": [],
+    "xp_history": [],
+    "provenance_lines": [
+        "01a1401e-adae-70ab-9adc-505670f848e1",
+        "be-demo \u00b7 2026-10-15 \u00b7 Beyond Elysium 1.6.1.1"
+    ],
+    "wounds": {
+        "bashing": 0,
+        "lethal": 0,
+        "aggravated": 0
+    }
+}

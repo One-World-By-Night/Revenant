@@ -158,3 +158,24 @@ describe('paginateEmbeds', () => {
 		expect(pages[1]).toHaveLength(3);
 	});
 });
+
+describe('tonight\'s spends beside each row (step 2)', () => {
+	const doc = JSON.parse(readFileSync(join(DIR, '../fixtures/sheet-markers.json'), 'utf8')) as SheetDocument;
+
+	it('is a real capture, not a guess: BE 1.6.1.1 wrote it, this file never edits it', () => {
+		const provenance = (doc as unknown as { provenance_lines?: string[] }).provenance_lines ?? [];
+		expect(provenance.join(' ')).toContain('Beyond Elysium 1.6.1.1');
+	});
+
+	it('carries a spent pool\'s temporary marker through a header pair unchanged', () => {
+		const embeds = buildSheetEmbeds(doc, { accentColor: null, footerText: doc.title });
+		const bloodField = embeds[0]?.fields?.find((f) => f.name === 'Blood');
+		expect(bloodField?.value).toBe('x10 (7 temporary)');
+	});
+
+	it('carries a lost trait\'s marker through a body section row unchanged', () => {
+		const abilities = doc.sections.find((s) => s.block_slug === 'vampire-abilities');
+		expect(abilities).toBeDefined();
+		expect(sectionLines(abilities as SheetSection)).toEqual(['Brawl x3 (lost tonight)']);
+	});
+});
