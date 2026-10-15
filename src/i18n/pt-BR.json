@@ -155,5 +155,8 @@
 	"challenge.fieldBlockSourceName": "Qual bloqueador declarado você está usando?",
 	"challenge.blockSourceInvalid": "Esse bloqueador não está entre os seus bloqueadores declarados, ou você já o usou. Tente de novo.",
 	"challenge.retestBlocked": "{blocker} bloqueia o reteste com **{source}**. O resultado anterior permanece.",
-	"challenge.retestAllowed": "{blocker} deixa o reteste valer. Jogue de novo."
+	"challenge.retestAllowed": "{blocker} deixa o reteste valer. Jogue de novo.",
+	"test.posted": "**{player}** é testado por **{narrator}**: {conditions}",
+	"test.succeeded": "**{player}** tem sucesso.",
+	"test.failed": "**{player}** falha."
 }

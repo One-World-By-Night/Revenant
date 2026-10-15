@@ -18,6 +18,7 @@ import { healCommand } from './heal.js';
 import { statusCommand } from './status.js';
 import { nightCommand } from './night.js';
 import { challengeCommand } from './challenge.js';
+import { testCommand } from './test.js';
 
 export interface CommandContext {
 	pool: Pool;
@@ -48,6 +49,7 @@ export const commands: BotCommand[] = [
 	statusCommand,
 	nightCommand,
 	challengeCommand,
+	testCommand,
 ];
 
 /**
