@@ -39,15 +39,15 @@ describe('runMigrations', () => {
 		]);
 	});
 
-	it('records the applied migration', async () => {
+	it('records every applied migration', async () => {
 		await runMigrations(pool, MIGRATIONS_DIR);
-		const { rows } = await pool.query('SELECT filename FROM schema_migrations');
-		expect(rows).toEqual([{ filename: '001_initial.sql' }]);
+		const { rows } = await pool.query('SELECT filename FROM schema_migrations ORDER BY filename');
+		expect(rows).toEqual([{ filename: '001_initial.sql' }, { filename: '002_night.sql' }]);
 	});
 
 	it('reports which migrations were newly applied', async () => {
 		const applied = await runMigrations(pool, MIGRATIONS_DIR);
-		expect(applied).toEqual(['001_initial.sql']);
+		expect(applied).toEqual(['001_initial.sql', '002_night.sql']);
 	});
 
 	it('runs twice without harm: the second run applies nothing and changes nothing', async () => {
@@ -58,8 +58,15 @@ describe('runMigrations', () => {
 
 		expect(secondRun).toEqual([]);
 		expect(await tableNames()).toEqual(before);
-		const { rows } = await pool.query('SELECT filename FROM schema_migrations');
-		expect(rows).toEqual([{ filename: '001_initial.sql' }]);
+		const { rows } = await pool.query('SELECT filename FROM schema_migrations ORDER BY filename');
+		expect(rows).toEqual([{ filename: '001_initial.sql' }, { filename: '002_night.sql' }]);
+	});
+
+	it('adds open_session_id to guild_settings', async () => {
+		await runMigrations(pool, MIGRATIONS_DIR);
+		await pool.query("INSERT INTO guild_settings (guild_id, open_session_id) VALUES ('g1', 42)");
+		const { rows } = await pool.query('SELECT open_session_id FROM guild_settings WHERE guild_id = $1', ['g1']);
+		expect(rows).toEqual([{ open_session_id: 42 }]);
 	});
 
 	it('can insert into every created table', async () => {
