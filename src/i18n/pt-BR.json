@@ -143,5 +143,17 @@
 	"challenge.fieldOverbidTrait": "O novo Trait que você aposta",
 	"challenge.overbidTooLow": "Essa contagem não é pelo menos o dobro da contagem declarada pelo oponente. Tente de novo.",
 	"challenge.overbidAccepted": "Sobrepuja aceita. Jogue de novo.",
-	"challenge.overbidThrown": "A sobrepuja foi aceita. Jogando de novo."
+	"challenge.overbidThrown": "A sobrepuja foi aceita. Jogando de novo.",
+	"challenge.retestButton": "Retestar",
+	"challenge.retestModalTitle": "Sua fonte de reteste",
+	"challenge.fieldRetestSourceName": "Qual fonte declarada você está usando?",
+	"challenge.retestSourceInvalid": "Essa fonte não está entre as suas fontes declaradas, ou você já a usou. Tente de novo.",
+	"challenge.retestAccepted": "Reteste gasto. {blocker}, bloquear ou deixar valer?",
+	"challenge.blockButton": "Bloquear",
+	"challenge.allowButton": "Deixar valer",
+	"challenge.blockModalTitle": "Sua fonte de bloqueio",
+	"challenge.fieldBlockSourceName": "Qual bloqueador declarado você está usando?",
+	"challenge.blockSourceInvalid": "Esse bloqueador não está entre os seus bloqueadores declarados, ou você já o usou. Tente de novo.",
+	"challenge.retestBlocked": "{blocker} bloqueia o reteste com **{source}**. O resultado anterior permanece.",
+	"challenge.retestAllowed": "{blocker} deixa o reteste valer. Jogue de novo."
 }

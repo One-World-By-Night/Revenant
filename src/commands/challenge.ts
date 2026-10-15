@@ -27,6 +27,11 @@ import {
 	bidNegativeTraitResponse,
 	validateOverbid,
 	submitOverbid,
+	validateRetest,
+	spendRetestSource,
+	validateBlock,
+	spendBlocker,
+	recordBlockedRetest,
 	latestThrow,
 	otherSide,
 	settle,
@@ -52,7 +57,12 @@ const NEGATIVE_TRAIT_RELENT_ID = 'challenge:negativeTrait:relent';
 const EXTRA_TRAIT_MODAL_ID = 'challenge:negativeTrait:extraTraitModal';
 const LOSER_ACCEPT_ID = 'challenge:loser:accept';
 const LOSER_OVERBID_ID = 'challenge:loser:overbid';
+const LOSER_RETEST_ID = 'challenge:loser:retest';
 const OVERBID_MODAL_ID = 'challenge:overbid:modal';
+const RETEST_MODAL_ID = 'challenge:retest:modal';
+const BLOCK_ID = 'challenge:retest:block';
+const ALLOW_ID = 'challenge:retest:allow';
+const BLOCK_MODAL_ID = 'challenge:retest:blockModal';
 const GESTURES: Gesture[] = ['rock', 'paper', 'scissors', 'bomb'];
 const GESTURE_LABEL_KEY: Record<Gesture, string> = {
 	rock: 'challenge.gestureRock',
@@ -203,11 +213,15 @@ function extraTraitModal(locale: Locale): ModalBuilder {
 		);
 }
 
-function loserChoiceRow(locale: Locale): ActionRowBuilder<ButtonBuilder> {
-	return new ActionRowBuilder<ButtonBuilder>().addComponents(
+function loserChoiceRow(locale: Locale, offerRetest: boolean): ActionRowBuilder<ButtonBuilder> {
+	const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
 		new ButtonBuilder().setCustomId(LOSER_ACCEPT_ID).setLabel(t(locale, 'challenge.acceptLossButton')).setStyle(ButtonStyle.Secondary),
 		new ButtonBuilder().setCustomId(LOSER_OVERBID_ID).setLabel(t(locale, 'challenge.overbidButton')).setStyle(ButtonStyle.Primary)
 	);
+	if (offerRetest) {
+		row.addComponents(new ButtonBuilder().setCustomId(LOSER_RETEST_ID).setLabel(t(locale, 'challenge.retestButton')).setStyle(ButtonStyle.Secondary));
+	}
+	return row;
 }
 
 function overbidModal(locale: Locale): ModalBuilder {
@@ -222,6 +236,40 @@ function overbidModal(locale: Locale): ModalBuilder {
 				new TextInputBuilder().setCustomId('overbid_trait').setLabel(t(locale, 'challenge.fieldOverbidTrait')).setStyle(TextInputStyle.Short).setRequired(true)
 			)
 		);
+}
+
+function retestModal(locale: Locale): ModalBuilder {
+	return new ModalBuilder()
+		.setCustomId(RETEST_MODAL_ID)
+		.setTitle(t(locale, 'challenge.retestModalTitle'))
+		.addComponents(
+			new ActionRowBuilder<TextInputBuilder>().addComponents(
+				new TextInputBuilder().setCustomId('retest_source_name').setLabel(t(locale, 'challenge.fieldRetestSourceName')).setStyle(TextInputStyle.Short).setRequired(true)
+			)
+		);
+}
+
+function blockChoiceRow(locale: Locale): ActionRowBuilder<ButtonBuilder> {
+	return new ActionRowBuilder<ButtonBuilder>().addComponents(
+		new ButtonBuilder().setCustomId(BLOCK_ID).setLabel(t(locale, 'challenge.blockButton')).setStyle(ButtonStyle.Danger),
+		new ButtonBuilder().setCustomId(ALLOW_ID).setLabel(t(locale, 'challenge.allowButton')).setStyle(ButtonStyle.Secondary)
+	);
+}
+
+function blockModal(locale: Locale): ModalBuilder {
+	return new ModalBuilder()
+		.setCustomId(BLOCK_MODAL_ID)
+		.setTitle(t(locale, 'challenge.blockModalTitle'))
+		.addComponents(
+			new ActionRowBuilder<TextInputBuilder>().addComponents(
+				new TextInputBuilder().setCustomId('block_source_name').setLabel(t(locale, 'challenge.fieldBlockSourceName')).setStyle(TextInputStyle.Short).setRequired(true)
+			)
+		);
+}
+
+function retestAvailable(state: ChallengeState, side: Side): boolean {
+	const declared = side === 'challenger' ? state.terms.challengerSources : state.terms.defenderSources;
+	return declared.some((source) => !state[side].usedSources.includes(source));
 }
 
 function characterOf(side: Side, challenger: ActiveCharacter, defender: ActiveCharacter, challengerDiscordId: string, defenderDiscordId: string) {
@@ -390,7 +438,7 @@ export const challengeCommand = {
 			const loserDiscordId = loserSide === 'challenger' ? interaction.user.id : opponentUser.id;
 			const loserName = loserSide === 'challenger' ? challengerActive!.name : defenderActive!.name;
 			const promptText = t(locale, 'challenge.loserChoicePrompt', { loser: loserName });
-			const prompt = await message.channel.send({ content: promptText, components: [loserChoiceRow(locale)] });
+			const prompt = await message.channel.send({ content: promptText, components: [loserChoiceRow(locale, retestAvailable(state, loserSide))] });
 
 			let choice: ButtonInteraction;
 			try {
@@ -408,6 +456,93 @@ export const challengeCommand = {
 				await choice.deferUpdate();
 				await prompt.edit({ components: [] }).catch(() => undefined);
 				await settleAndReport(state, settle(state));
+				return;
+			}
+
+			if (choice.customId === LOSER_RETEST_ID) {
+				await choice.showModal(retestModal(locale));
+				let retestSubmission: ModalSubmitInteraction;
+				try {
+					retestSubmission = await choice.awaitModalSubmit({
+						filter: (i) => i.customId === RETEST_MODAL_ID && i.user.id === loserDiscordId,
+						time: 5 * 60 * 1000,
+					});
+				} catch {
+					return;
+				}
+				const source = retestSubmission.fields.getTextInputValue('retest_source_name').trim();
+				const retestCheck = validateRetest(state, loserSide, source);
+				if (!retestCheck.ok) {
+					await retestSubmission.reply({ content: t(locale, 'challenge.retestSourceInvalid'), flags: MessageFlags.Ephemeral });
+					return;
+				}
+				const afterSpend = spendRetestSource(state, loserSide, source);
+				await saveChallenge(context.pool, challenge.id, afterSpend, 'retest');
+				await retestSubmission.reply({ content: t(locale, 'challenge.claimRecorded'), flags: MessageFlags.Ephemeral });
+
+				const blockingSide = otherSide(loserSide);
+				const blockingDiscordId = blockingSide === 'challenger' ? interaction.user.id : opponentUser.id;
+				const blockingName = blockingSide === 'challenger' ? challengerActive!.name : defenderActive!.name;
+				await prompt
+					.edit({ content: `${promptText}\n\n${t(locale, 'challenge.retestAccepted', { blocker: blockingName })}`, components: [blockChoiceRow(locale)] })
+					.catch(() => undefined);
+
+				let blockChoice: ButtonInteraction;
+				try {
+					blockChoice = await prompt.awaitMessageComponent({
+						componentType: ComponentType.Button,
+						filter: (i) => i.user.id === blockingDiscordId,
+						time: settings.challenge_timeout_minutes * 60 * 1000,
+					});
+				} catch {
+					await prompt.edit({ components: [] }).catch(() => undefined);
+					return;
+				}
+
+				if (blockChoice.customId === ALLOW_ID) {
+					await blockChoice.deferUpdate();
+					await prompt
+						.edit({ content: `${promptText}\n\n${t(locale, 'challenge.retestAllowed', { blocker: blockingName })}`, components: [] })
+						.catch(() => undefined);
+					const latestForRetest = await loadChallenge(context.pool, challenge.id);
+					if (!latestForRetest) {
+						return;
+					}
+					const cleared = latestForRetest.state;
+					cleared.challenger.gesture = null;
+					cleared.defender.gesture = null;
+					await saveChallenge(context.pool, challenge.id, cleared, 'retest');
+					await message.edit({ components: [throwRow(locale, true)] }).catch(() => undefined);
+					return;
+				}
+
+				await blockChoice.showModal(blockModal(locale));
+				let blockSubmission: ModalSubmitInteraction;
+				try {
+					blockSubmission = await blockChoice.awaitModalSubmit({
+						filter: (i) => i.customId === BLOCK_MODAL_ID && i.user.id === blockingDiscordId,
+						time: 5 * 60 * 1000,
+					});
+				} catch {
+					return;
+				}
+				const blocker = blockSubmission.fields.getTextInputValue('block_source_name').trim();
+				const latestForBlock = await loadChallenge(context.pool, challenge.id);
+				if (!latestForBlock) {
+					return;
+				}
+				const blockCheck = validateBlock(latestForBlock.state, blockingSide, blocker);
+				if (!blockCheck.ok) {
+					await blockSubmission.reply({ content: t(locale, 'challenge.blockSourceInvalid'), flags: MessageFlags.Ephemeral });
+					return;
+				}
+				const afterBlockSpend = spendBlocker(latestForBlock.state, blockingSide, blocker);
+				const blocked = recordBlockedRetest(afterBlockSpend, loserSide);
+				await blockSubmission.reply({ content: t(locale, 'challenge.claimRecorded'), flags: MessageFlags.Ephemeral });
+				await prompt
+					.edit({ content: `${promptText}\n\n${t(locale, 'challenge.retestBlocked', { blocker: blockingName, source: blocker })}`, components: [] })
+					.catch(() => undefined);
+				await settleAndReport(blocked, settle(blocked));
 				return;
 			}
 

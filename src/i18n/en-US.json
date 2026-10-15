@@ -143,5 +143,17 @@
 	"challenge.fieldOverbidTrait": "The new Trait you bid",
 	"challenge.overbidTooLow": "That count isn't at least double the opponent's claimed count. Try again.",
 	"challenge.overbidAccepted": "Overbid accepted. Throw again.",
-	"challenge.overbidThrown": "The overbid was accepted. Throwing again."
+	"challenge.overbidThrown": "The overbid was accepted. Throwing again.",
+	"challenge.retestButton": "Retest",
+	"challenge.retestModalTitle": "Your retest source",
+	"challenge.fieldRetestSourceName": "Which declared source are you using?",
+	"challenge.retestSourceInvalid": "That source isn't one of your declared sources, or you already used it. Try again.",
+	"challenge.retestAccepted": "Retest spent. {blocker}, block it or let it stand?",
+	"challenge.blockButton": "Block it",
+	"challenge.allowButton": "Let it stand",
+	"challenge.blockModalTitle": "Your blocking source",
+	"challenge.fieldBlockSourceName": "Which declared blocker are you using?",
+	"challenge.blockSourceInvalid": "That blocker isn't one of your declared blockers, or you already used it. Try again.",
+	"challenge.retestBlocked": "{blocker} blocks the retest with **{source}**. The prior result stands.",
+	"challenge.retestAllowed": "{blocker} lets the retest stand. Throw again."
 }
