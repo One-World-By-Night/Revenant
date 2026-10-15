@@ -59,6 +59,24 @@ async function fetchLinkedCharacters(connection: ConnectionRow, secret: Buffer, 
 	});
 }
 
+/**
+ * The player's own stored active character id for this server, or null when none is set. Shared by
+ * every command that falls back to "the character I'm currently playing" when none is named.
+ */
+export async function activeCharacterId(
+	context: CommandContext,
+	interaction: ChatInputCommandInteraction | AutocompleteInteraction
+): Promise<number | null> {
+	if (!interaction.guildId) {
+		return null;
+	}
+	const prefs = await context.pool.query<{ active_character_id: number | null }>(
+		'SELECT active_character_id FROM user_prefs WHERE guild_id = $1 AND discord_user_id = $2',
+		[interaction.guildId, interaction.user.id]
+	);
+	return prefs.rows[0]?.active_character_id ?? null;
+}
+
 async function loadConnection(context: CommandContext, guildId: string): Promise<ConnectionRow | null> {
 	const { rows } = await context.pool.query<ConnectionRow>(
 		'SELECT be_connection_id, secret_enc, rest_root, game_slug FROM connections WHERE guild_id = $1',
