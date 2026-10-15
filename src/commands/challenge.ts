@@ -11,13 +11,14 @@ import {
 	type ChatInputCommandInteraction,
 	type ButtonInteraction,
 	type ModalSubmitInteraction,
+	type User,
 } from 'discord.js';
 import type { CommandContext } from './registry.js';
 import { decrypt } from '../crypto/secretBox.js';
 import { t, resolvePublicLocale, type Locale } from '../i18n/index.js';
 import { activeCharacterFor, type ActiveCharacter } from '../challenges/activeCharacter.js';
 import { loadGuildSettings } from './settings.js';
-import { createChallenge, loadChallenge, saveChallenge, settleChallenge, recordCost, type ChallengeRow } from '../challenges/store.js';
+import { createChallenge, loadChallenge, saveChallenge, settleChallenge, recordCost, type ChallengeRow, type ChallengeKind } from '../challenges/store.js';
 import {
 	submitClaim,
 	validateClaim,
@@ -272,10 +273,26 @@ function retestAvailable(state: ChallengeState, side: Side): boolean {
 	return declared.some((source) => !state[side].usedSources.includes(source));
 }
 
-function characterOf(side: Side, challenger: ActiveCharacter, defender: ActiveCharacter, challengerDiscordId: string, defenderDiscordId: string) {
-	return side === 'challenger'
-		? { characterId: challenger.id, discordUserId: challengerDiscordId }
-		: { characterId: defender.id, discordUserId: defenderDiscordId };
+function characterOf(
+	side: Side,
+	challenger: ActiveCharacter,
+	defender: ActiveCharacter | null,
+	challengerDiscordId: string,
+	defenderDiscordId: string
+): { characterId: number; discordUserId: string } | null {
+	if (side === 'challenger') {
+		return { characterId: challenger.id, discordUserId: challengerDiscordId };
+	}
+	return defender ? { characterId: defender.id, discordUserId: defenderDiscordId } : null;
+}
+
+export interface ChallengeFlowOptions {
+	opponentUser: User;
+	category: Category;
+	conditions: string;
+	kind: ChallengeKind;
+	/** False for a Narrator claiming a difficulty count in `/static` - no BE character is looked up or resolved for the defender side, and no BE cost is ever charged to it. */
+	requireDefenderCharacter: boolean;
 }
 
 export const challengeCommand = {
@@ -311,36 +328,49 @@ export const challengeCommand = {
 		) as SlashCommandBuilder,
 
 	async execute(interaction: ChatInputCommandInteraction, context: CommandContext): Promise<void> {
-		const locale: Locale = interaction.locale === 'pt-BR' ? 'pt-BR' : 'en-US';
-		if (!interaction.inGuild() || !interaction.guildId) {
-			return;
-		}
-		const guildId = interaction.guildId;
+		await runChallengeFlow(interaction, context, {
+			opponentUser: interaction.options.getUser('opponent', true),
+			category: interaction.options.getString('category', true) as Category,
+			conditions: interaction.options.getString('conditions', true),
+			kind: 'contested',
+			requireDefenderCharacter: true,
+		});
+	},
+};
 
-		const connection = await loadConnection(context, guildId);
-		if (!connection) {
-			await interaction.reply({ content: t(locale, 'disconnect.notConnected'), flags: MessageFlags.Ephemeral });
-			return;
-		}
-		const secret = decrypt(connection.secret_enc, context.config.secretKey);
-		const beConnection: Connection = { be_connection_id: connection.be_connection_id, rest_root: connection.rest_root, game_slug: connection.game_slug };
+export async function runChallengeFlow(interaction: ChatInputCommandInteraction, context: CommandContext, options: ChallengeFlowOptions): Promise<void> {
+	const { opponentUser, category, conditions, kind, requireDefenderCharacter } = options;
+	const locale: Locale = interaction.locale === 'pt-BR' ? 'pt-BR' : 'en-US';
+	if (!interaction.inGuild() || !interaction.guildId) {
+		return;
+	}
+	const guildId = interaction.guildId;
 
-		const opponentUser = interaction.options.getUser('opponent', true);
-		const category = interaction.options.getString('category', true) as Category;
-		const conditions = interaction.options.getString('conditions', true);
+	const connection = await loadConnection(context, guildId);
+	if (!connection) {
+		await interaction.reply({ content: t(locale, 'disconnect.notConnected'), flags: MessageFlags.Ephemeral });
+		return;
+	}
+	const secret = decrypt(connection.secret_enc, context.config.secretKey);
+	const beConnection: Connection = { be_connection_id: connection.be_connection_id, rest_root: connection.rest_root, game_slug: connection.game_slug };
 
-		const challengerActive = await activeCharacterFor(context.pool, beConnection, secret, guildId, interaction.user.id);
-		if (!challengerActive) {
-			await interaction.reply({ content: t(locale, 'challenge.noActiveCharacter'), flags: MessageFlags.Ephemeral });
-			return;
-		}
-		const defenderActive = await activeCharacterFor(context.pool, beConnection, secret, guildId, opponentUser.id);
+	const challengerActive = await activeCharacterFor(context.pool, beConnection, secret, guildId, interaction.user.id);
+	if (!challengerActive) {
+		await interaction.reply({ content: t(locale, 'challenge.noActiveCharacter'), flags: MessageFlags.Ephemeral });
+		return;
+	}
+
+	let defenderActive: ActiveCharacter | null = null;
+	if (requireDefenderCharacter) {
+		defenderActive = await activeCharacterFor(context.pool, beConnection, secret, guildId, opponentUser.id);
 		if (!defenderActive) {
 			await interaction.reply({ content: t(locale, 'challenge.opponentNoActiveCharacter', { username: opponentUser.username }), flags: MessageFlags.Ephemeral });
 			return;
 		}
+	}
+	const defenderName = defenderActive ? defenderActive.name : opponentUser.username;
 
-		await interaction.showModal(termsModal(locale));
+	await interaction.showModal(termsModal(locale));
 		let submitted: ModalSubmitInteraction;
 		try {
 			submitted = await interaction.awaitModalSubmit({
@@ -367,7 +397,7 @@ export const challengeCommand = {
 		const challenge = await createChallenge(context.pool, {
 			guildId,
 			channelId: interaction.channelId,
-			kind: 'contested',
+			kind,
 			challengerDiscordId: interaction.user.id,
 			defenderDiscordId: opponentUser.id,
 			category,
@@ -379,7 +409,7 @@ export const challengeCommand = {
 		await submitted.reply({
 			content: t(locale, 'challenge.posted', {
 				challenger: challengerActive.name,
-				defender: defenderActive.name,
+				defender: defenderName,
 				category: t(locale, CATEGORY_LABEL_KEY[category]),
 				conditions,
 				traits: terms.appropriateTraits,
@@ -401,15 +431,16 @@ export const challengeCommand = {
 
 		async function settleAndReport(state: ChallengeState, outcome: ReturnType<typeof settle>): Promise<void> {
 			const target: CostTarget = {
-				challenger: characterOf('challenger', challengerActive!, defenderActive!, interaction.user.id, opponentUser.id),
-				defender: characterOf('defender', challengerActive!, defenderActive!, interaction.user.id, opponentUser.id),
-				reason: `Lost a ${category} challenge against ${outcome.loser === 'defender' ? challengerActive!.name : defenderActive!.name}`,
+				challenger: characterOf('challenger', challengerActive!, defenderActive, interaction.user.id, opponentUser.id),
+				defender: characterOf('defender', challengerActive!, defenderActive, interaction.user.id, opponentUser.id),
+				reason: `Lost a ${category} challenge against ${outcome.loser === 'defender' ? challengerActive!.name : defenderName}`,
 				traitLocations,
 				abilityLocations,
 			};
 			const applied = await applyCosts(beConnection, secret, outcome, target);
 			for (const cost of applied) {
-				await recordCost(context.pool, challenge.id, cost.kind, cost.payload, null);
+				const payload = cost.noCharacter ? { ...cost.payload, side: cost.side, noCharacter: true } : cost.payload;
+				await recordCost(context.pool, challenge.id, cost.kind, payload, null);
 			}
 			await settleChallenge(context.pool, challenge.id, state);
 
@@ -417,14 +448,14 @@ export const challengeCommand = {
 				outcome.loser === 'both'
 					? t(locale, 'challenge.resultDraw')
 					: t(locale, 'challenge.resultWin', {
-							winnerName: outcome.loser === 'defender' ? challengerActive!.name : defenderActive!.name,
-							loserName: outcome.loser === 'defender' ? defenderActive!.name : challengerActive!.name,
+							winnerName: outcome.loser === 'defender' ? challengerActive!.name : defenderName,
+							loserName: outcome.loser === 'defender' ? defenderName : challengerActive!.name,
 							category: t(locale, CATEGORY_LABEL_KEY[category]),
 						});
 			const lostTraits = outcome.lostTraits.join(', ') || '—';
 			await message
 				.edit({
-					content: `${t(locale, 'challenge.posted', { challenger: challengerActive!.name, defender: defenderActive!.name, category: t(locale, CATEGORY_LABEL_KEY[category]), conditions, traits: terms.appropriateTraits })}\n\n${resultText}\n${t(locale, 'challenge.costsApplied', { loserName: outcome.loser === 'both' ? `${challengerActive!.name} / ${defenderActive!.name}` : outcome.loser === 'defender' ? defenderActive!.name : challengerActive!.name, traits: lostTraits })}`,
+					content: `${t(locale, 'challenge.posted', { challenger: challengerActive!.name, defender: defenderName, category: t(locale, CATEGORY_LABEL_KEY[category]), conditions, traits: terms.appropriateTraits })}\n\n${resultText}\n${t(locale, 'challenge.costsApplied', { loserName: outcome.loser === 'both' ? `${challengerActive!.name} / ${defenderName}` : outcome.loser === 'defender' ? defenderName : challengerActive!.name, traits: lostTraits })}`,
 					components: [],
 				})
 				.catch(() => undefined);
@@ -436,7 +467,7 @@ export const challengeCommand = {
 				return;
 			}
 			const loserDiscordId = loserSide === 'challenger' ? interaction.user.id : opponentUser.id;
-			const loserName = loserSide === 'challenger' ? challengerActive!.name : defenderActive!.name;
+			const loserName = loserSide === 'challenger' ? challengerActive!.name : defenderName;
 			const promptText = t(locale, 'challenge.loserChoicePrompt', { loser: loserName });
 			const prompt = await message.channel.send({ content: promptText, components: [loserChoiceRow(locale, retestAvailable(state, loserSide))] });
 
@@ -482,7 +513,7 @@ export const challengeCommand = {
 
 				const blockingSide = otherSide(loserSide);
 				const blockingDiscordId = blockingSide === 'challenger' ? interaction.user.id : opponentUser.id;
-				const blockingName = blockingSide === 'challenger' ? challengerActive!.name : defenderActive!.name;
+				const blockingName = blockingSide === 'challenger' ? challengerActive!.name : defenderName;
 				await prompt
 					.edit({ content: `${promptText}\n\n${t(locale, 'challenge.retestAccepted', { blocker: blockingName })}`, components: [blockChoiceRow(locale)] })
 					.catch(() => undefined);
@@ -703,7 +734,7 @@ export const challengeCommand = {
 			if (!message.channel.isSendable()) {
 				return;
 			}
-			const promptText = t(locale, 'challenge.negativeTraitPrompt', { challenger: challengerActive!.name, defender: defenderActive!.name, trait });
+			const promptText = t(locale, 'challenge.negativeTraitPrompt', { challenger: challengerActive!.name, defender: defenderName, trait });
 			const prompt = await message.channel.send({ content: promptText, components: [negativeTraitAnswerRow(locale)] });
 
 			let answer: ButtonInteraction;
@@ -727,7 +758,7 @@ export const challengeCommand = {
 				const next = callNegativeTrait(beforeAnswer.state, trait, false);
 				await saveChallenge(context.pool, challenge.id, next, 'throwing');
 				await answer.update({
-					content: `${promptText}\n\n${t(locale, 'challenge.negativeTraitDenied', { defender: defenderActive!.name, trait, challenger: challengerActive!.name })}`,
+					content: `${promptText}\n\n${t(locale, 'challenge.negativeTraitDenied', { defender: defenderName, trait, challenger: challengerActive!.name })}`,
 					components: [],
 				});
 				await message.edit({ components: [throwRow(locale, true)] }).catch(() => undefined);
@@ -737,7 +768,7 @@ export const challengeCommand = {
 			const withCall = callNegativeTrait(beforeAnswer.state, trait, true);
 			await saveChallenge(context.pool, challenge.id, withCall, 'negative_trait');
 			await answer.update({
-				content: `${promptText}\n\n${t(locale, 'challenge.negativeTraitConfirmed', { defender: defenderActive!.name, trait })}`,
+				content: `${promptText}\n\n${t(locale, 'challenge.negativeTraitConfirmed', { defender: defenderName, trait })}`,
 				components: [],
 			});
 
@@ -845,5 +876,4 @@ export const challengeCommand = {
 				}
 			}
 		});
-	},
-};
+}
