@@ -192,6 +192,14 @@ export function currentLoser(state: ChallengeState): Side | null {
 	return otherSide(last.winner);
 }
 
+/**
+ * A defender who relents loses the conditions outright, with no Trait bid and no throw at all - the
+ * same costs a loss would carry, but nothing comes from a claim that was never made.
+ */
+export function settleRelent(side: Side): Outcome {
+	return { loser: side, lostTraits: [], expendedAbilities: [] };
+}
+
 export type OverbidResult = { ok: true } | { ok: false; reason: 'count_too_low' } | { ok: false; reason: 'no_loser' };
 
 /**

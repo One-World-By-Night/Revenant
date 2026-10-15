@@ -53,7 +53,7 @@
 	"sheet.nextButton": "Next",
 	"roll.bothGiven": "Give either `dice` or `pool`, not both.",
 	"roll.neitherGiven": "Give either `dice` or `pool`.",
-	"settings.summary": "**Pool rules:** {poolRules}\n**Staff channel:** {staffChannel}\n**Language:** {language}",
+	"settings.summary": "**Pool rules:** {poolRules}\n**Staff channel:** {staffChannel}\n**Language:** {language}\n**Trait cap:** {traitCap}\n**Challenge timeout:** {challengeTimeout} minutes",
 	"settings.none": "not set",
 	"settings.languageDefault": "the server's Discord language",
 	"settings.updated": "Settings updated.\n\n{summary}",

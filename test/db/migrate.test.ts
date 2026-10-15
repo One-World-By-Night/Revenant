@@ -41,7 +41,7 @@ describe('runMigrations', () => {
 		]);
 	});
 
-	const MIGRATION_FILES = ['001_initial.sql', '002_night.sql', '003_challenges.sql'];
+	const MIGRATION_FILES = ['001_initial.sql', '002_night.sql', '003_challenges.sql', '004_challenge_settings.sql'];
 
 	it('records every applied migration', async () => {
 		await runMigrations(pool, MIGRATIONS_DIR);
@@ -64,6 +64,13 @@ describe('runMigrations', () => {
 		expect(await tableNames()).toEqual(before);
 		const { rows } = await pool.query('SELECT filename FROM schema_migrations ORDER BY filename');
 		expect(rows).toEqual(MIGRATION_FILES.map((filename) => ({ filename })));
+	});
+
+	it('adds trait_cap and challenge_timeout_minutes to guild_settings', async () => {
+		await runMigrations(pool, MIGRATIONS_DIR);
+		await pool.query("INSERT INTO guild_settings (guild_id, trait_cap) VALUES ('g2', 30)");
+		const { rows } = await pool.query('SELECT trait_cap, challenge_timeout_minutes FROM guild_settings WHERE guild_id = $1', ['g2']);
+		expect(rows).toEqual([{ trait_cap: 30, challenge_timeout_minutes: 60 }]);
 	});
 
 	it('challenge_costs references a real challenge row', async () => {

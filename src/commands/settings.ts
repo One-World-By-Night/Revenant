@@ -19,10 +19,12 @@ interface ConnectionRow {
 	game_slug: string;
 }
 
-interface GuildSettingsRow {
+export interface GuildSettingsRow {
 	pool_rules: PoolRules;
 	staff_channel_id: string | null;
 	locale: string | null;
+	trait_cap: number | null;
+	challenge_timeout_minutes: number;
 }
 
 /**
@@ -54,12 +56,20 @@ export function languageChoiceToStoredLocale(choice: string): string | null {
 
 export function formatSettingsSummary(
 	locale: Locale,
-	settings: { poolRules: PoolRules; staffChannelId: string | null; storedLocale: string | null }
+	settings: {
+		poolRules: PoolRules;
+		staffChannelId: string | null;
+		storedLocale: string | null;
+		traitCap: number | null;
+		challengeTimeoutMinutes: number;
+	}
 ): string {
 	return t(locale, 'settings.summary', {
 		poolRules: describePoolRules(settings.poolRules),
 		staffChannel: settings.staffChannelId ? `<#${settings.staffChannelId}>` : t(locale, 'settings.none'),
 		language: describeLanguage(locale, settings.storedLocale),
+		traitCap: settings.traitCap ?? t(locale, 'settings.none'),
+		challengeTimeout: settings.challengeTimeoutMinutes,
 	});
 }
 
@@ -71,12 +81,12 @@ async function loadConnection(context: CommandContext, guildId: string): Promise
 	return rows[0] ?? null;
 }
 
-async function loadGuildSettings(context: CommandContext, guildId: string): Promise<GuildSettingsRow> {
+export async function loadGuildSettings(context: CommandContext, guildId: string): Promise<GuildSettingsRow> {
 	const { rows } = await context.pool.query<GuildSettingsRow>(
-		'SELECT pool_rules, staff_channel_id, locale FROM guild_settings WHERE guild_id = $1',
+		'SELECT pool_rules, staff_channel_id, locale, trait_cap, challenge_timeout_minutes FROM guild_settings WHERE guild_id = $1',
 		[guildId]
 	);
-	return rows[0] ?? { pool_rules: 'revised', staff_channel_id: null, locale: null };
+	return rows[0] ?? { pool_rules: 'revised', staff_channel_id: null, locale: null, trait_cap: null, challenge_timeout_minutes: 60 };
 }
 
 export const settingsCommand = {
@@ -115,6 +125,20 @@ export const settingsCommand = {
 						name_localizations: { 'pt-BR': 'Padrão (o idioma do Discord do servidor)' },
 					}
 				)
+		)
+		.addIntegerOption((option) =>
+			option
+				.setName('trait_cap')
+				.setDescription('The most Traits a challenge claim may name - 0 clears it, leave unset for no cap')
+				.setDescriptionLocalizations({ 'pt-BR': 'O máximo de Traits que uma reivindicação pode declarar - 0 remove o limite' })
+				.setMinValue(0)
+		)
+		.addIntegerOption((option) =>
+			option
+				.setName('challenge_timeout')
+				.setDescription('Minutes before an unanswered challenge expires')
+				.setDescriptionLocalizations({ 'pt-BR': 'Minutos até um desafio sem resposta expirar' })
+				.setMinValue(1)
 		) as SlashCommandBuilder,
 
 	async execute(interaction: ChatInputCommandInteraction, context: CommandContext): Promise<void> {
@@ -157,6 +181,8 @@ export const settingsCommand = {
 		const poolRulesOption = interaction.options.getString('pool_rules') as PoolRules | null;
 		const staffChannelOption = interaction.options.getChannel('staff_channel') as TextChannel | null;
 		const languageOption = interaction.options.getString('language');
+		const traitCapOption = interaction.options.getInteger('trait_cap');
+		const challengeTimeoutOption = interaction.options.getInteger('challenge_timeout');
 
 		if (staffChannelOption) {
 			const permissions = staffChannelOption.permissionsFor(interaction.client.user);
@@ -182,6 +208,14 @@ export const settingsCommand = {
 			params.push(languageChoiceToStoredLocale(languageOption));
 			updates.push(`locale = $${params.length}`);
 		}
+		if (traitCapOption !== null) {
+			params.push(traitCapOption === 0 ? null : traitCapOption);
+			updates.push(`trait_cap = $${params.length}`);
+		}
+		if (challengeTimeoutOption !== null) {
+			params.push(challengeTimeoutOption);
+			updates.push(`challenge_timeout_minutes = $${params.length}`);
+		}
 		if (updates.length > 0) {
 			await context.pool.query(`UPDATE guild_settings SET ${updates.join(', ')} WHERE guild_id = $1`, params);
 		}
@@ -191,6 +225,8 @@ export const settingsCommand = {
 			poolRules: settings.pool_rules,
 			staffChannelId: settings.staff_channel_id,
 			storedLocale: settings.locale,
+			traitCap: settings.trait_cap,
+			challengeTimeoutMinutes: settings.challenge_timeout_minutes,
 		});
 		await interaction.editReply(updates.length > 0 ? t(locale, 'settings.updated', { summary }) : summary);
 	},

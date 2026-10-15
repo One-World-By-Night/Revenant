@@ -18,6 +18,7 @@ import {
 	callNegativeTrait,
 	bidNegativeTraitResponse,
 	settle,
+	settleRelent,
 	otherSide,
 	type Terms,
 	type Claim,
@@ -266,6 +267,12 @@ describe('the Negative Trait call', () => {
 		const state = callNegativeTrait(emptyState(terms()), 'Coward', false);
 		expect(state.challenger.bids).toEqual([{ trait: 'Coward', stage: 'negative_trait' }]);
 		expect(state.defender.bids).toEqual([]);
+	});
+});
+
+describe('settleRelent', () => {
+	it('names the relenting side as the loser with nothing bid', () => {
+		expect(settleRelent('defender')).toEqual({ loser: 'defender', lostTraits: [], expendedAbilities: [] });
 	});
 });
 
