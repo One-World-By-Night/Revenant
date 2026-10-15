@@ -27,8 +27,9 @@ export interface WoundResult {
 }
 
 export interface CostTarget {
-	challenger: CharacterSide;
-	defender: CharacterSide;
+	/** Null for a side with no BE character at all - a Narrator claiming a difficulty count in `/static`, say. */
+	challenger: CharacterSide | null;
+	defender: CharacterSide | null;
 	reason: string;
 	/** Where each possible bid Trait name lives on a sheet - resolved by the Discord layer at claim time. */
 	traitLocations: TraitLocation[];
@@ -41,13 +42,15 @@ export interface AppliedCost {
 	side: Side;
 	kind: 'trait_lost' | 'ability_expended' | 'wound';
 	payload: Record<string, unknown>;
+	/** True when this side has no BE character - recorded for the bot's own tracking only, never sent to BE. */
+	noCharacter?: boolean;
 }
 
 function locate(locations: TraitLocation[], name: string): TraitLocation | undefined {
 	return locations.find((location) => location.trait === name);
 }
 
-function characterFor(target: CostTarget, side: Side): CharacterSide {
+function characterFor(target: CostTarget, side: Side): CharacterSide | null {
 	return side === 'challenger' ? target.challenger : target.defender;
 }
 
@@ -55,7 +58,8 @@ function characterFor(target: CostTarget, side: Side): CharacterSide {
  * Sends a settled challenge's own costs to BE: every lost Trait and expended Ability for the
  * loser (or both sides on a draw), and the loser's wound when the challenge was an attack - each
  * through the same routes a player typing `/spend`/`/wound` already uses, each reason naming this
- * challenge.
+ * challenge. A side with no BE character (a Narrator claiming a difficulty count) gets every cost
+ * recorded for the bot's own tracking instead, with no BE call at all.
  */
 export async function applyCosts(connection: Connection, secret: Buffer, outcome: Outcome, target: CostTarget): Promise<AppliedCost[]> {
 	const losers: Side[] = outcome.loser === 'both' ? ['challenger', 'defender'] : [outcome.loser];
@@ -68,12 +72,20 @@ export async function applyCosts(connection: Connection, secret: Buffer, outcome
 			if (!location) {
 				continue;
 			}
+			if (!character) {
+				applied.push({ side, kind: 'trait_lost', payload: { trait }, noCharacter: true });
+				continue;
+			}
 			await addNightLoss(connection, secret, character.discordUserId, character.characterId, 'trait', location.blockSlug, trait, target.reason);
 			applied.push({ side, kind: 'trait_lost', payload: { trait, blockSlug: location.blockSlug } });
 		}
 		for (const source of outcome.expendedAbilities) {
 			const location = locate(target.abilityLocations, source);
 			if (!location) {
+				continue;
+			}
+			if (!character) {
+				applied.push({ side, kind: 'ability_expended', payload: { ability: source }, noCharacter: true });
 				continue;
 			}
 			await addNightLoss(connection, secret, character.discordUserId, character.characterId, 'ability', location.blockSlug, source, target.reason, 1);
@@ -83,6 +95,10 @@ export async function applyCosts(connection: Connection, secret: Buffer, outcome
 
 	if (target.wound && outcome.loser !== 'both') {
 		const character = characterFor(target, outcome.loser);
+		if (!character) {
+			applied.push({ side: outcome.loser, kind: 'wound', payload: { type: target.wound.type, amount: target.wound.amount, armor: target.wound.armor }, noCharacter: true });
+			return applied;
+		}
 		const reason = target.wound.armor > 0 ? `${target.wound.armor} to armor. ${target.reason}` : target.reason;
 		await takeWound(connection, secret, character.discordUserId, character.characterId, target.wound.type, target.wound.amount, reason);
 		applied.push({ side: outcome.loser, kind: 'wound', payload: { type: target.wound.type, amount: target.wound.amount, armor: target.wound.armor } });
@@ -105,6 +121,9 @@ export async function reverseCost(
 	correctionReason: string
 ): Promise<void> {
 	const character = characterFor(target, cost.side);
+	if (!character) {
+		return;
+	}
 
 	if (cost.kind === 'wound') {
 		const payload = cost.payload as { type: WoundType; amount: number };
