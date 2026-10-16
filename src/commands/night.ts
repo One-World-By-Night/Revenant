@@ -50,7 +50,7 @@ async function setOpenSessionId(context: CommandContext, guildId: string, sessio
 	);
 }
 
-async function getOpenSessionId(context: CommandContext, guildId: string): Promise<number | null> {
+export async function getOpenSessionId(context: CommandContext, guildId: string): Promise<number | null> {
 	const { rows } = await context.pool.query<{ open_session_id: number | null }>(
 		'SELECT open_session_id FROM guild_settings WHERE guild_id = $1',
 		[guildId]
