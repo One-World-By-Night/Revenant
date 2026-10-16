@@ -8,6 +8,24 @@ export interface ApprovedLink {
 	room_channel_id: string | null;
 }
 
+export interface ApprovedLinkForRouting {
+	wp_user_id: number;
+	discord_user_id: string;
+	room_channel_id: string | null;
+}
+
+/**
+ * Every approved link in this chronicle, with no acting Discord user - the bot's own routing needs
+ * this regardless of whether any particular Storyteller is doing anything at the moment.
+ */
+export async function fetchApprovedLinksForRouting(connection: Connection, secret: Buffer): Promise<ApprovedLinkForRouting[]> {
+	return callBe<ApprovedLinkForRouting[]>(connection.rest_root, {
+		method: 'GET',
+		route: `/be/v1/${connection.game_slug}/bot/approved-links`,
+		signedAs: { connectionId: String(connection.be_connection_id), secret },
+	});
+}
+
 /**
  * Every approved Discord link for this chronicle, each carrying its own room channel when one is set.
  */
