@@ -21,6 +21,9 @@ import { challengeCommand } from './challenge.js';
 import { challengesCommand } from './challenges.js';
 import { staticCommand } from './static.js';
 import { testCommand } from './test.js';
+import { asCommand } from './as.js';
+import { unlockCommand } from './unlock.js';
+import { triggerCommand } from './trigger.js';
 
 export interface CommandContext {
 	pool: Pool;
@@ -54,6 +57,9 @@ export const commands: BotCommand[] = [
 	challengesCommand,
 	staticCommand,
 	testCommand,
+	asCommand,
+	unlockCommand,
+	triggerCommand,
 ];
 
 /**

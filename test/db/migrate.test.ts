@@ -33,15 +33,19 @@ describe('runMigrations', () => {
 		expect(await tableNames()).toEqual([
 			'challenge_costs',
 			'challenges',
+			'channel_webhooks',
 			'connections',
 			'dice_log',
 			'guild_settings',
+			'posting_locks',
+			'posting_triggers',
+			'proxied_messages',
 			'schema_migrations',
 			'user_prefs',
 		]);
 	});
 
-	const MIGRATION_FILES = ['001_initial.sql', '002_night.sql', '003_challenges.sql', '004_challenge_settings.sql'];
+	const MIGRATION_FILES = ['001_initial.sql', '002_night.sql', '003_challenges.sql', '004_challenge_settings.sql', '005_posting.sql'];
 
 	it('records every applied migration', async () => {
 		await runMigrations(pool, MIGRATIONS_DIR);
@@ -93,6 +97,28 @@ describe('runMigrations', () => {
 		await pool.query("INSERT INTO guild_settings (guild_id, open_session_id) VALUES ('g1', 42)");
 		const { rows } = await pool.query('SELECT open_session_id FROM guild_settings WHERE guild_id = $1', ['g1']);
 		expect(rows).toEqual([{ open_session_id: 42 }]);
+	});
+
+	it('stores a channel webhook, a trigger, a lock, and a proxied message', async () => {
+		await runMigrations(pool, MIGRATIONS_DIR);
+
+		await pool.query(
+			"INSERT INTO channel_webhooks (guild_id, channel_id, webhook_id, webhook_token_enc) VALUES ('g1', 'c1', 'w1', '\\x00')"
+		);
+		await pool.query("INSERT INTO posting_triggers (guild_id, discord_user_id, trigger) VALUES ('g1', 'u1', 'k:')");
+		await pool.query("INSERT INTO posting_locks (guild_id, discord_user_id, channel_id, character_id) VALUES ('g1', 'u1', 'c1', 42)");
+		await pool.query("INSERT INTO posting_locks (guild_id, discord_user_id, channel_id, character_id) VALUES ('g1', 'u2', NULL, 43)");
+		await pool.query(
+			"INSERT INTO proxied_messages (guild_id, message_id, channel_id, discord_user_id, character_id) VALUES ('g1', 'm1', 'c1', 'u1', 42)"
+		);
+
+		const { rows: locks } = await pool.query('SELECT discord_user_id, channel_id, character_id FROM posting_locks ORDER BY discord_user_id');
+		expect(locks).toEqual([
+			{ discord_user_id: 'u1', channel_id: 'c1', character_id: 42 },
+			{ discord_user_id: 'u2', channel_id: null, character_id: 43 },
+		]);
+		const { rows: proxied } = await pool.query('SELECT character_id FROM proxied_messages WHERE message_id = $1', ['m1']);
+		expect(proxied).toEqual([{ character_id: 42 }]);
 	});
 
 	it('can insert into every created table', async () => {

@@ -174,5 +174,20 @@
 	"challenges.voided": "Desafio #{id} anulado. {count} custo(s) revertido(s).",
 	"challenges.corrected": "Desafio #{id} corrigido. {count} custo(s) revertido(s).",
 	"challenges.noCostsToReverse": "Desafio #{id} não tinha custos não revertidos - nada a fazer.",
-	"challenges.defaultCorrectionReason": "Correção do Storyteller"
+	"challenges.defaultCorrectionReason": "Correção do Storyteller",
+	"as.wrongChannel": "Isso só funciona em um canal de texto comum.",
+	"as.nothingToDo": "Dê uma mensagem, um bloqueio, ou os dois.",
+	"as.cannotPostAsThat": "Você não pode postar como esse personagem.",
+	"as.posted": "Postado como {name}.",
+	"as.lockedChannel": "Travado em {name} neste canal até /unlock.",
+	"as.lockedServer": "Travado em {name} em todo o servidor até /unlock.",
+	"unlock.done": "Destravado. Sua próxima mensagem posta como você mesmo de novo.",
+	"trigger.cleared": "Seu gatilho foi removido.",
+	"trigger.invalid": "Dê um gatilho de 1 a 10 caracteres.",
+	"trigger.set": "Seu gatilho agora é \"{text}\". Uma mensagem que começa com ele posta como seu personagem ativo.",
+	"whosWho.noProfile": "Este personagem não tem um perfil público no Quem É Quem.",
+	"whosWho.link": "Perfil de {name} no Quem É Quem: {url}",
+	"whosWho.notProxied": "Esta mensagem não foi postada como um personagem.",
+	"whoPostedThis.notProxied": "Esta mensagem não foi postada como um personagem.",
+	"whoPostedThis.result": "Postado por {username} como {name}."
 }
