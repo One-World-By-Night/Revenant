@@ -7,6 +7,8 @@ import { createPool } from './db/pool.js';
 import { runMigrations } from './db/migrate.js';
 import { startHealthServer } from './health.js';
 import { findCommand, type CommandContext } from './commands/registry.js';
+import { findContextMenuCommand } from './commands/contextMenus.js';
+import { handleMessageCreate } from './discord/autopost.js';
 
 const config = loadConfig();
 const logger = createLogger(config.logLevel);
@@ -46,6 +48,21 @@ client.on(Events.InteractionCreate, (interaction) => {
 		return;
 	}
 
+	if (interaction.isMessageContextMenuCommand()) {
+		const contextMenuCommand = findContextMenuCommand(interaction.commandName);
+		if (!contextMenuCommand) {
+			logger.warn({ commandName: interaction.commandName }, 'received an interaction for an unknown context menu command');
+			return;
+		}
+		contextMenuCommand.execute(interaction, commandContext).catch((error: unknown) => {
+			logger.error(
+				{ commandName: interaction.commandName, error: error instanceof Error ? error.message : String(error) },
+				'context menu command execution failed'
+			);
+		});
+		return;
+	}
+
 	if (!interaction.isChatInputCommand()) {
 		return;
 	}
@@ -59,6 +76,12 @@ client.on(Events.InteractionCreate, (interaction) => {
 			{ commandName: interaction.commandName, error: error instanceof Error ? error.message : String(error) },
 			'command execution failed'
 		);
+	});
+});
+
+client.on(Events.MessageCreate, (message) => {
+	handleMessageCreate(message, commandContext).catch((error: unknown) => {
+		logger.error({ error: error instanceof Error ? error.message : String(error) }, 'message-create handling failed');
 	});
 });
 
