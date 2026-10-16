@@ -439,7 +439,7 @@ export async function runChallengeFlow(interaction: ChatInputCommandInteraction,
 			};
 			const applied = await applyCosts(beConnection, secret, outcome, target);
 			for (const cost of applied) {
-				const payload = cost.noCharacter ? { ...cost.payload, side: cost.side, noCharacter: true } : cost.payload;
+				const payload = { ...cost.payload, side: cost.side, ...(cost.noCharacter ? { noCharacter: true } : {}) };
 				await recordCost(context.pool, challenge.id, cost.kind, payload, null);
 			}
 			await settleChallenge(context.pool, challenge.id, state);
@@ -857,7 +857,6 @@ export async function runChallengeFlow(interaction: ChatInputCommandInteraction,
 					await channel.send(t(publicLocale, 'challenge.staffDisputePing', { username: buttonInteraction.user.username, channelId: interaction.channelId }));
 				}
 			}
-			collector.stop();
 		}
 
 		collector.on('collect', (buttonInteraction: ButtonInteraction) => {
