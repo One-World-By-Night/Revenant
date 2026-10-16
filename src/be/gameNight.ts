@@ -62,6 +62,10 @@ export async function fetchMyPlots(connection: Connection, secret: Buffer, disco
 		route: `/be/v1/${connection.game_slug}/my/plots`,
 		signedAs: { connectionId: String(connection.be_connection_id), secret, discordUserId },
 	});
+	// BE's own JSON serializes a numeric id as a string; every caller comparing by id needs a real number.
+	result.plots.forEach((plot) => {
+		plot.id = Number(plot.id);
+	});
 	return result.plots;
 }
 
@@ -93,6 +97,63 @@ export async function postAction(
 		body: { entry_type: 'action', content },
 		signedAs: { connectionId: String(connection.be_connection_id), secret, discordUserId },
 	});
+}
+
+export interface PlotSearchResult {
+	id: number;
+	title: string;
+}
+
+/**
+ * Plots matching a title search, exactly as the chronicle's own authorization already scopes them -
+ * everything for a Storyteller, only what the searching player's own audience lets them see otherwise.
+ */
+export async function searchPlots(connection: Connection, secret: Buffer, discordUserId: string, search: string): Promise<PlotSearchResult[]> {
+	const result = await callBe<PlotSearchResult[]>(connection.rest_root, {
+		method: 'GET',
+		route: `/be/v1/${connection.game_slug}/plots`,
+		query: { search, per_page: '25' },
+		signedAs: { connectionId: String(connection.be_connection_id), secret, discordUserId },
+	});
+	result.forEach((plot) => {
+		plot.id = Number(plot.id);
+	});
+	return result;
+}
+
+export interface PlotEntryRow {
+	id: number;
+	entry_type: string;
+	content: string;
+	event_date: string | null;
+	created_at: string;
+}
+
+export interface PlotWithEntries {
+	id: number;
+	title: string;
+	status: string;
+	game_date: string | null;
+	entries: PlotEntryRow[];
+}
+
+/**
+ * One plot's own entries, exactly as BE's `GET /plots/{id}` already resolves them for the caller - a
+ * note entry hidden from a non-manager, a plot outside the caller's own audience refused as not found.
+ */
+export async function fetchPlotWithEntries(
+	connection: Connection,
+	secret: Buffer,
+	discordUserId: string,
+	plotId: number
+): Promise<PlotWithEntries> {
+	const result = await callBe<PlotWithEntries>(connection.rest_root, {
+		method: 'GET',
+		route: `/be/v1/${connection.game_slug}/plots/${plotId}`,
+		signedAs: { connectionId: String(connection.be_connection_id), secret, discordUserId },
+	});
+	result.id = Number(result.id);
+	return result;
 }
 
 export async function postScene(

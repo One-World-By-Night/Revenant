@@ -4,7 +4,16 @@ import { writeFileSync, readFileSync, rmSync } from 'node:fs';
 import { discoverRestRoot } from '../../src/be/discover.js';
 import { BeApiError } from '../../src/be/client.js';
 import { createSession } from '../../src/be/temporaryState.js';
-import { checkIn, createReport, fetchMyPlots, downtimePlots, postAction, postScene } from '../../src/be/gameNight.js';
+import {
+	checkIn,
+	createReport,
+	fetchMyPlots,
+	downtimePlots,
+	postAction,
+	postScene,
+	searchPlots,
+	fetchPlotWithEntries,
+} from '../../src/be/gameNight.js';
 
 const WP_PATH = '/Users/greghacke/owbn/_localwp';
 const WP_CLI = '/opt/homebrew/Cellar/wp-cli/2.12.0/bin/wp';
@@ -134,13 +143,20 @@ foreach ( [ 'it-game-night-player', 'it-game-night-hst' ] as $login ) {
 		).rejects.toMatchObject({ httpStatus: 409 });
 	});
 
-	it("flags the character's own auto-created plot as an action allocation in My Plots", async () => {
+	it("flags the character's own auto-created plot as an action allocation in My Plots, with a real numeric id", async () => {
 		const plots = await fetchMyPlots(connection, secret, DISCORD_USER_ID);
 		const ownPlot = plots.find((plot) => plot.title === ownPlotTitle);
 
 		expect(ownPlot).toBeDefined();
 		expect(ownPlot?.is_action_allocation).toBe(true);
 		expect(downtimePlots(plots).map((plot) => plot.title)).toContain(ownPlotTitle);
+
+		// BE's own JSON serializes a plot id as a string - every command comparing by id, the way
+		// `/downtime post` and `/scene` both do, needs fetchMyPlots to have already coerced it to a
+		// real number or that comparison always fails.
+		expect(typeof ownPlot?.id).toBe('number');
+		const foundById = plots.find((plot) => plot.id === ownPlot?.id);
+		expect(foundById).toBe(ownPlot);
 	});
 
 	it('posts a real action entry to the own allocation plot', async () => {
@@ -161,5 +177,39 @@ foreach ( [ 'it-game-night-player', 'it-game-night-hst' ] as $login ) {
 
 	it('refuses a scene signed by a Discord user with no connection to the plot', async () => {
 		await expect(postScene(connection, secret, 'it-game-night-stranger', 1, 'Nobody.')).rejects.toThrow(BeApiError);
+	});
+
+	it('finds the own plot by title search, then reads it back with the entries already posted', async () => {
+		const found = await searchPlots(connection, secret, DISCORD_USER_ID, 'IT Game Night Character');
+		const match = found.find((plot) => plot.title === ownPlotTitle);
+		expect(match).toBeDefined();
+
+		const plot = await fetchPlotWithEntries(connection, secret, DISCORD_USER_ID, match!.id);
+		expect(plot.title).toBe(ownPlotTitle);
+		const contents = plot.entries.map((entry) => entry.content);
+		expect(contents).toContain('I keep watch all night.');
+		expect(contents).toContain('Corwin Ashe: I watch the docks.');
+	});
+
+	it("refuses to read a plot the signed-in user's audience excludes", async () => {
+		const stOnlyScript = '/tmp/revenant-it-game-night-st-only-plot.php';
+		const stOnlyFixture = '/tmp/revenant-it-game-night-st-only-plot-fixture.json';
+		writeFileSync(
+			stOnlyScript,
+			`<?php
+$game = \\BeyondElysium\\Models\\Game::find_by_slug('${SLUG}');
+$id = (int) \\BeyondElysium\\Models\\Plot::create([
+	'game_id' => (int) $game->id, 'title' => 'IT ST-Only Plot', 'initiated_by' => 'st',
+	'created_by' => 1, 'audience' => 'storytellers',
+]);
+file_put_contents('${stOnlyFixture}', wp_json_encode(['plot_id' => $id]));
+`
+		);
+		wpEvalFile(stOnlyScript);
+		const { plot_id: plotId } = JSON.parse(readFileSync(stOnlyFixture, 'utf8')) as { plot_id: number };
+		rmSync(stOnlyScript, { force: true });
+		rmSync(stOnlyFixture, { force: true });
+
+		await expect(fetchPlotWithEntries(connection, secret, DISCORD_USER_ID, plotId)).rejects.toMatchObject({ httpStatus: 404 });
 	});
 });
