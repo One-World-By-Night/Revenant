@@ -25,6 +25,10 @@ export interface GuildSettingsRow {
 	locale: string | null;
 	trait_cap: number | null;
 	challenge_timeout_minutes: number;
+	role_sync_enabled: boolean;
+	player_role_id: string | null;
+	narrator_role_id: string | null;
+	storyteller_role_id: string | null;
 }
 
 /**
@@ -54,6 +58,10 @@ export function languageChoiceToStoredLocale(choice: string): string | null {
 	return choice === 'default' ? null : choice;
 }
 
+function describeRole(roleId: string | null, locale: Locale): string {
+	return roleId ? `<@&${roleId}>` : t(locale, 'settings.none');
+}
+
 export function formatSettingsSummary(
 	locale: Locale,
 	settings: {
@@ -62,6 +70,10 @@ export function formatSettingsSummary(
 		storedLocale: string | null;
 		traitCap: number | null;
 		challengeTimeoutMinutes: number;
+		roleSyncEnabled: boolean;
+		playerRoleId: string | null;
+		narratorRoleId: string | null;
+		storytellerRoleId: string | null;
 	}
 ): string {
 	return t(locale, 'settings.summary', {
@@ -70,6 +82,10 @@ export function formatSettingsSummary(
 		language: describeLanguage(locale, settings.storedLocale),
 		traitCap: settings.traitCap ?? t(locale, 'settings.none'),
 		challengeTimeout: settings.challengeTimeoutMinutes,
+		roleSync: t(locale, settings.roleSyncEnabled ? 'settings.on' : 'settings.off'),
+		playerRole: describeRole(settings.playerRoleId, locale),
+		narratorRole: describeRole(settings.narratorRoleId, locale),
+		storytellerRole: describeRole(settings.storytellerRoleId, locale),
 	});
 }
 
@@ -83,10 +99,24 @@ async function loadConnection(context: CommandContext, guildId: string): Promise
 
 export async function loadGuildSettings(context: CommandContext, guildId: string): Promise<GuildSettingsRow> {
 	const { rows } = await context.pool.query<GuildSettingsRow>(
-		'SELECT pool_rules, staff_channel_id, locale, trait_cap, challenge_timeout_minutes FROM guild_settings WHERE guild_id = $1',
+		`SELECT pool_rules, staff_channel_id, locale, trait_cap, challenge_timeout_minutes,
+		        role_sync_enabled, player_role_id, narrator_role_id, storyteller_role_id
+		 FROM guild_settings WHERE guild_id = $1`,
 		[guildId]
 	);
-	return rows[0] ?? { pool_rules: 'revised', staff_channel_id: null, locale: null, trait_cap: null, challenge_timeout_minutes: 60 };
+	return (
+		rows[0] ?? {
+			pool_rules: 'revised',
+			staff_channel_id: null,
+			locale: null,
+			trait_cap: null,
+			challenge_timeout_minutes: 60,
+			role_sync_enabled: false,
+			player_role_id: null,
+			narrator_role_id: null,
+			storyteller_role_id: null,
+		}
+	);
 }
 
 export const settingsCommand = {
@@ -139,6 +169,34 @@ export const settingsCommand = {
 				.setDescription('Minutes before an unanswered challenge expires')
 				.setDescriptionLocalizations({ 'pt-BR': 'Minutos até um desafio sem resposta expirar' })
 				.setMinValue(1)
+		)
+		.addStringOption((option) =>
+			option
+				.setName('role_sync')
+				.setDescription('Whether /room gives a linked player their Player, Narrator or Storyteller role')
+				.setDescriptionLocalizations({ 'pt-BR': 'Se o /room dá ao jogador vinculado seu cargo de Jogador, Narrador ou Narrador-chefe' })
+				.addChoices(
+					{ name: 'On', value: 'on', name_localizations: { 'pt-BR': 'Ativado' } },
+					{ name: 'Off', value: 'off', name_localizations: { 'pt-BR': 'Desativado' } }
+				)
+		)
+		.addRoleOption((option) =>
+			option
+				.setName('player_role')
+				.setDescription('The role role sync gives a plain player')
+				.setDescriptionLocalizations({ 'pt-BR': 'O cargo que a sincronização dá a um jogador comum' })
+		)
+		.addRoleOption((option) =>
+			option
+				.setName('narrator_role')
+				.setDescription('The role role sync gives a Narrator')
+				.setDescriptionLocalizations({ 'pt-BR': 'O cargo que a sincronização dá a um Narrador' })
+		)
+		.addRoleOption((option) =>
+			option
+				.setName('storyteller_role')
+				.setDescription('The role role sync gives a Storyteller')
+				.setDescriptionLocalizations({ 'pt-BR': 'O cargo que a sincronização dá a um Narrador-chefe' })
 		) as SlashCommandBuilder,
 
 	async execute(interaction: ChatInputCommandInteraction, context: CommandContext): Promise<void> {
@@ -183,6 +241,10 @@ export const settingsCommand = {
 		const languageOption = interaction.options.getString('language');
 		const traitCapOption = interaction.options.getInteger('trait_cap');
 		const challengeTimeoutOption = interaction.options.getInteger('challenge_timeout');
+		const roleSyncOption = interaction.options.getString('role_sync');
+		const playerRoleOption = interaction.options.getRole('player_role');
+		const narratorRoleOption = interaction.options.getRole('narrator_role');
+		const storytellerRoleOption = interaction.options.getRole('storyteller_role');
 
 		if (staffChannelOption) {
 			const permissions = staffChannelOption.permissionsFor(interaction.client.user);
@@ -216,6 +278,22 @@ export const settingsCommand = {
 			params.push(challengeTimeoutOption);
 			updates.push(`challenge_timeout_minutes = $${params.length}`);
 		}
+		if (roleSyncOption !== null) {
+			params.push(roleSyncOption === 'on');
+			updates.push(`role_sync_enabled = $${params.length}`);
+		}
+		if (playerRoleOption !== null) {
+			params.push(playerRoleOption.id);
+			updates.push(`player_role_id = $${params.length}`);
+		}
+		if (narratorRoleOption !== null) {
+			params.push(narratorRoleOption.id);
+			updates.push(`narrator_role_id = $${params.length}`);
+		}
+		if (storytellerRoleOption !== null) {
+			params.push(storytellerRoleOption.id);
+			updates.push(`storyteller_role_id = $${params.length}`);
+		}
 		if (updates.length > 0) {
 			await context.pool.query(`UPDATE guild_settings SET ${updates.join(', ')} WHERE guild_id = $1`, params);
 		}
@@ -227,6 +305,10 @@ export const settingsCommand = {
 			storedLocale: settings.locale,
 			traitCap: settings.trait_cap,
 			challengeTimeoutMinutes: settings.challenge_timeout_minutes,
+			roleSyncEnabled: settings.role_sync_enabled,
+			playerRoleId: settings.player_role_id,
+			narratorRoleId: settings.narrator_role_id,
+			storytellerRoleId: settings.storyteller_role_id,
 		});
 		await interaction.editReply(updates.length > 0 ? t(locale, 'settings.updated', { summary }) : summary);
 	},

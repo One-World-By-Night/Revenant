@@ -45,7 +45,14 @@ describe('runMigrations', () => {
 		]);
 	});
 
-	const MIGRATION_FILES = ['001_initial.sql', '002_night.sql', '003_challenges.sql', '004_challenge_settings.sql', '005_posting.sql'];
+	const MIGRATION_FILES = [
+		'001_initial.sql',
+		'002_night.sql',
+		'003_challenges.sql',
+		'004_challenge_settings.sql',
+		'005_posting.sql',
+		'006_rooms.sql',
+	];
 
 	it('records every applied migration', async () => {
 		await runMigrations(pool, MIGRATIONS_DIR);
@@ -97,6 +104,25 @@ describe('runMigrations', () => {
 		await pool.query("INSERT INTO guild_settings (guild_id, open_session_id) VALUES ('g1', 42)");
 		const { rows } = await pool.query('SELECT open_session_id FROM guild_settings WHERE guild_id = $1', ['g1']);
 		expect(rows).toEqual([{ open_session_id: 42 }]);
+	});
+
+	it('adds role sync columns to guild_settings, off by default', async () => {
+		await runMigrations(pool, MIGRATIONS_DIR);
+		await pool.query("INSERT INTO guild_settings (guild_id) VALUES ('g3')");
+		const { rows } = await pool.query(
+			'SELECT role_sync_enabled, player_role_id, narrator_role_id, storyteller_role_id FROM guild_settings WHERE guild_id = $1',
+			['g3']
+		);
+		expect(rows).toEqual([{ role_sync_enabled: false, player_role_id: null, narrator_role_id: null, storyteller_role_id: null }]);
+
+		await pool.query(
+			"UPDATE guild_settings SET role_sync_enabled = true, player_role_id = 'p1', narrator_role_id = 'n1', storyteller_role_id = 's1' WHERE guild_id = 'g3'"
+		);
+		const { rows: updated } = await pool.query(
+			'SELECT role_sync_enabled, player_role_id, narrator_role_id, storyteller_role_id FROM guild_settings WHERE guild_id = $1',
+			['g3']
+		);
+		expect(updated).toEqual([{ role_sync_enabled: true, player_role_id: 'p1', narrator_role_id: 'n1', storyteller_role_id: 's1' }]);
 	});
 
 	it('stores a channel webhook, a trigger, a lock, and a proxied message', async () => {
