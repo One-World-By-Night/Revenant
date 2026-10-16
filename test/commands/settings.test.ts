@@ -44,22 +44,35 @@ describe('formatSettingsSummary', () => {
 			storedLocale: 'pt-BR',
 			traitCap: 30,
 			challengeTimeoutMinutes: 45,
+			roleSyncEnabled: true,
+			playerRoleId: '111',
+			narratorRoleId: '222',
+			storytellerRoleId: '333',
 		});
 		expect(summary).toContain('V20');
 		expect(summary).toContain('<#123>');
 		expect(summary).toContain('Portuguese (Brazil)');
 		expect(summary).toContain('30');
 		expect(summary).toContain('45');
+		expect(summary).toContain('on');
+		expect(summary).toContain('<@&111>');
+		expect(summary).toContain('<@&222>');
+		expect(summary).toContain('<@&333>');
 	});
 
-	it('shows "not set" for no staff channel or trait cap', () => {
+	it('shows "not set" for no staff channel, trait cap or role', () => {
 		const summary = formatSettingsSummary('en-US', {
 			poolRules: 'revised',
 			staffChannelId: null,
 			storedLocale: null,
 			traitCap: null,
 			challengeTimeoutMinutes: 60,
+			roleSyncEnabled: false,
+			playerRoleId: null,
+			narratorRoleId: null,
+			storytellerRoleId: null,
 		});
-		expect(summary.match(/not set/g)).toHaveLength(2);
+		expect(summary.match(/not set/g)).toHaveLength(5);
+		expect(summary).toContain('off');
 	});
 });

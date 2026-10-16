@@ -29,6 +29,7 @@ import { aarCommand } from './aar.js';
 import { downtimeCommand } from './downtime.js';
 import { sceneCommand } from './scene.js';
 import { plotCommand } from './plot.js';
+import { roomCommand } from './room.js';
 
 export interface CommandContext {
 	pool: Pool;
@@ -70,6 +71,7 @@ export const commands: BotCommand[] = [
 	downtimeCommand,
 	sceneCommand,
 	plotCommand,
+	roomCommand,
 ];
 
 /**
