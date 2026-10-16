@@ -158,5 +158,21 @@
 	"challenge.retestAllowed": "{blocker} deixa o reteste valer. Jogue de novo.",
 	"test.posted": "**{player}** é testado por **{narrator}**: {conditions}",
 	"test.succeeded": "**{player}** tem sucesso.",
-	"test.failed": "**{player}** falha."
+	"test.failed": "**{player}** falha.",
+	"challenges.notFound": "Nenhum desafio com esse número foi encontrado neste servidor.",
+	"challenges.historyEmpty": "Nenhum desafio ainda.",
+	"challenges.historyLine": "#{id} **{kind}** {category} — {status} — {conditions}",
+	"challenges.logHeader": "**Desafio #{id}** ({kind}, {status})\n**Condições:** {conditions}\n**Traits apropriados:** {traits}",
+	"challenges.logSide": "**{label}:** reivindicou {traitCount} Trait(s){bomb}, apostou: {bids}",
+	"challenges.logBombYes": ", tinha a bomba",
+	"challenges.logNoBids": "nenhum",
+	"challenges.logThrows": "**Jogadas:** {count}",
+	"challenges.logNoThrows": "Nenhuma jogada ainda.",
+	"challenges.logOutcome": "**Resultado:** {loser} perdeu: {traits}",
+	"challenges.logNoOutcome": "Ainda não resolvido.",
+	"challenges.logCosts": "**Custos não revertidos:** {count}",
+	"challenges.voided": "Desafio #{id} anulado. {count} custo(s) revertido(s).",
+	"challenges.corrected": "Desafio #{id} corrigido. {count} custo(s) revertido(s).",
+	"challenges.noCostsToReverse": "Desafio #{id} não tinha custos não revertidos - nada a fazer.",
+	"challenges.defaultCorrectionReason": "Correção do Storyteller"
 }

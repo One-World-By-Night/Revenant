@@ -442,7 +442,7 @@ export async function runChallengeFlow(interaction: ChatInputCommandInteraction,
 				const payload = { ...cost.payload, side: cost.side, ...(cost.noCharacter ? { noCharacter: true } : {}) };
 				await recordCost(context.pool, challenge.id, cost.kind, payload, null);
 			}
-			await settleChallenge(context.pool, challenge.id, state);
+			await settleChallenge(context.pool, challenge.id, { ...state, outcome });
 
 			const resultText =
 				outcome.loser === 'both'

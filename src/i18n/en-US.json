@@ -158,5 +158,21 @@
 	"challenge.retestAllowed": "{blocker} lets the retest stand. Throw again.",
 	"test.posted": "**{player}** is tested by **{narrator}**: {conditions}",
 	"test.succeeded": "**{player}** succeeds.",
-	"test.failed": "**{player}** fails."
+	"test.failed": "**{player}** fails.",
+	"challenges.notFound": "No challenge with that number was found in this server.",
+	"challenges.historyEmpty": "No challenges yet.",
+	"challenges.historyLine": "#{id} **{kind}** {category} — {status} — {conditions}",
+	"challenges.logHeader": "**Challenge #{id}** ({kind}, {status})\n**Conditions:** {conditions}\n**Appropriate Traits:** {traits}",
+	"challenges.logSide": "**{label}:** claimed {traitCount} Trait(s){bomb}, bid: {bids}",
+	"challenges.logBombYes": ", had the bomb",
+	"challenges.logNoBids": "none",
+	"challenges.logThrows": "**Throws:** {count}",
+	"challenges.logNoThrows": "No throws yet.",
+	"challenges.logOutcome": "**Outcome:** {loser} lost: {traits}",
+	"challenges.logNoOutcome": "Not yet settled.",
+	"challenges.logCosts": "**Unreversed costs:** {count}",
+	"challenges.voided": "Challenge #{id} voided. {count} cost(s) reversed.",
+	"challenges.corrected": "Challenge #{id} corrected. {count} cost(s) reversed.",
+	"challenges.noCostsToReverse": "Challenge #{id} had no unreversed costs - nothing to do.",
+	"challenges.defaultCorrectionReason": "Storyteller correction"
 }
