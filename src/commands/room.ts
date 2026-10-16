@@ -4,6 +4,7 @@ import {
 	PermissionFlagsBits,
 	MessageFlags,
 	type ChatInputCommandInteraction,
+	type Guild,
 } from 'discord.js';
 import type { BotCommand, CommandContext } from './registry.js';
 import { callBe, BeApiError } from '../be/client.js';
@@ -29,6 +30,23 @@ async function loadConnection(context: CommandContext, guildId: string): Promise
 
 function findLink(links: ApprovedLink[], discordUserId: string): ApprovedLink | undefined {
 	return links.find((link) => link.discord_user_id === discordUserId);
+}
+
+const ROOMS_CATEGORY_NAME = 'Player Rooms';
+
+/**
+ * The guild's own "Player Rooms" category, reused across every `/room create` call rather than
+ * minted fresh each time - found by name first, created once if no category by that name exists yet.
+ */
+async function findOrCreateRoomsCategory(guild: Guild): Promise<string> {
+	const existing = guild.channels.cache.find(
+		(channel) => channel.type === ChannelType.GuildCategory && channel.name === ROOMS_CATEGORY_NAME
+	);
+	if (existing) {
+		return existing.id;
+	}
+	const created = await guild.channels.create({ name: ROOMS_CATEGORY_NAME, type: ChannelType.GuildCategory });
+	return created.id;
 }
 
 function roleIdFor(settings: GuildSettingsRow, role: 'storyteller' | 'narrator' | 'player'): string | null {
@@ -168,9 +186,11 @@ export const roomCommand: BotCommand = {
 						overwrites.push({ id: roleId, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] });
 					}
 				}
+				const categoryId = await findOrCreateRoomsCategory(interaction.guild);
 				const created = await interaction.guild.channels.create({
 					name: `room-${targetUser.username}`.toLowerCase().slice(0, 90),
 					type: ChannelType.GuildText,
+					parent: categoryId,
 					permissionOverwrites: overwrites,
 				});
 				channelId = created.id;
