@@ -174,5 +174,20 @@
 	"challenges.voided": "Challenge #{id} voided. {count} cost(s) reversed.",
 	"challenges.corrected": "Challenge #{id} corrected. {count} cost(s) reversed.",
 	"challenges.noCostsToReverse": "Challenge #{id} had no unreversed costs - nothing to do.",
-	"challenges.defaultCorrectionReason": "Storyteller correction"
+	"challenges.defaultCorrectionReason": "Storyteller correction",
+	"as.wrongChannel": "This only works in a regular text channel.",
+	"as.nothingToDo": "Give a message, a lock, or both.",
+	"as.cannotPostAsThat": "You can't post as that character.",
+	"as.posted": "Posted as {name}.",
+	"as.lockedChannel": "Locked to {name} in this channel until /unlock.",
+	"as.lockedServer": "Locked to {name} across the server until /unlock.",
+	"unlock.done": "Unlocked. Your next message posts as yourself again.",
+	"trigger.cleared": "Your trigger is cleared.",
+	"trigger.invalid": "Give a trigger from 1 to 10 characters.",
+	"trigger.set": "Your trigger is now \"{text}\". A message starting with it posts as your active character.",
+	"whosWho.noProfile": "This character has no public Who's Who profile.",
+	"whosWho.link": "{name}'s Who's Who profile: {url}",
+	"whosWho.notProxied": "This message wasn't posted as a character.",
+	"whoPostedThis.notProxied": "This message wasn't posted as a character.",
+	"whoPostedThis.result": "Posted by {username} as {name}."
 }
