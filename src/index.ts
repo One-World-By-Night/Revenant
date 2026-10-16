@@ -9,6 +9,7 @@ import { startHealthServer } from './health.js';
 import { findCommand, type CommandContext } from './commands/registry.js';
 import { findContextMenuCommand } from './commands/contextMenus.js';
 import { handleMessageCreate } from './discord/autopost.js';
+import { startNoticePoller } from './notices/poller.js';
 
 const config = loadConfig();
 const logger = createLogger(config.logLevel);
@@ -90,6 +91,7 @@ logger.info({ port: config.healthPort }, 'health server listening');
 
 try {
 	await client.login(config.discordToken);
+	startNoticePoller(client, pool, config, logger);
 } catch (error) {
 	logger.error({ error: error instanceof Error ? error.message : String(error) }, 'Discord login failed');
 }
