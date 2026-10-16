@@ -21,7 +21,7 @@ if (applied.length > 0) {
 	logger.info({ applied }, 'ran pending migrations');
 }
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
 client.once('clientReady', (readyClient) => {
 	logger.info({ user: readyClient.user.tag }, 'logged in to Discord');
