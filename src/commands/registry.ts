@@ -24,6 +24,10 @@ import { testCommand } from './test.js';
 import { asCommand } from './as.js';
 import { unlockCommand } from './unlock.js';
 import { triggerCommand } from './trigger.js';
+import { checkinCommand } from './checkin.js';
+import { aarCommand } from './aar.js';
+import { downtimeCommand } from './downtime.js';
+import { sceneCommand } from './scene.js';
 
 export interface CommandContext {
 	pool: Pool;
@@ -60,6 +64,10 @@ export const commands: BotCommand[] = [
 	asCommand,
 	unlockCommand,
 	triggerCommand,
+	checkinCommand,
+	aarCommand,
+	downtimeCommand,
+	sceneCommand,
 ];
 
 /**
