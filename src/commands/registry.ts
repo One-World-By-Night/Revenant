@@ -17,6 +17,10 @@ import { woundCommand } from './wound.js';
 import { healCommand } from './heal.js';
 import { statusCommand } from './status.js';
 import { nightCommand } from './night.js';
+import { challengeCommand } from './challenge.js';
+import { challengesCommand } from './challenges.js';
+import { staticCommand } from './static.js';
+import { testCommand } from './test.js';
 
 export interface CommandContext {
 	pool: Pool;
@@ -46,6 +50,10 @@ export const commands: BotCommand[] = [
 	healCommand,
 	statusCommand,
 	nightCommand,
+	challengeCommand,
+	challengesCommand,
+	staticCommand,
+	testCommand,
 ];
 
 /**

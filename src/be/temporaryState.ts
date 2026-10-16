@@ -246,3 +246,48 @@ export async function closeSession(connection: Connection, secret: Buffer, disco
 		signedAs: { connectionId: String(connection.be_connection_id), secret, discordUserId },
 	});
 }
+
+/**
+ * Records a lost Trait or an expended Ability for the night, logged with a reason - a challenge's
+ * own cost, or a plain player-typed loss.
+ */
+export async function addNightLoss(
+	connection: Connection,
+	secret: Buffer,
+	discordUserId: string,
+	characterId: number,
+	kind: 'trait' | 'ability',
+	blockSlug: string,
+	name: string,
+	reason: string,
+	levels?: number
+): Promise<NightLosses> {
+	const body: Record<string, unknown> = { kind, block_slug: blockSlug, name, reason };
+	if (kind === 'ability' && levels !== undefined) {
+		body.levels = levels;
+	}
+	return callBe<NightLosses>(connection.rest_root, {
+		method: 'POST',
+		route: `/be/v1/${connection.game_slug}/characters/${characterId}/night-losses`,
+		body,
+		signedAs: { connectionId: String(connection.be_connection_id), secret, discordUserId },
+	});
+}
+
+/**
+ * Clears a character's night losses entirely, logged with a reason.
+ */
+export async function clearNightLosses(
+	connection: Connection,
+	secret: Buffer,
+	discordUserId: string,
+	characterId: number,
+	reason: string
+): Promise<NightLosses> {
+	return callBe<NightLosses>(connection.rest_root, {
+		method: 'DELETE',
+		route: `/be/v1/${connection.game_slug}/characters/${characterId}/night-losses`,
+		body: { reason },
+		signedAs: { connectionId: String(connection.be_connection_id), secret, discordUserId },
+	});
+}

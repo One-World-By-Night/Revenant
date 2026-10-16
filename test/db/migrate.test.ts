@@ -28,9 +28,11 @@ async function tableNames(): Promise<string[]> {
 }
 
 describe('runMigrations', () => {
-	it('creates every table from 001_initial.sql', async () => {
+	it('creates every table from every migration', async () => {
 		await runMigrations(pool, MIGRATIONS_DIR);
 		expect(await tableNames()).toEqual([
+			'challenge_costs',
+			'challenges',
 			'connections',
 			'dice_log',
 			'guild_settings',
@@ -39,15 +41,17 @@ describe('runMigrations', () => {
 		]);
 	});
 
+	const MIGRATION_FILES = ['001_initial.sql', '002_night.sql', '003_challenges.sql', '004_challenge_settings.sql'];
+
 	it('records every applied migration', async () => {
 		await runMigrations(pool, MIGRATIONS_DIR);
 		const { rows } = await pool.query('SELECT filename FROM schema_migrations ORDER BY filename');
-		expect(rows).toEqual([{ filename: '001_initial.sql' }, { filename: '002_night.sql' }]);
+		expect(rows).toEqual(MIGRATION_FILES.map((filename) => ({ filename })));
 	});
 
 	it('reports which migrations were newly applied', async () => {
 		const applied = await runMigrations(pool, MIGRATIONS_DIR);
-		expect(applied).toEqual(['001_initial.sql', '002_night.sql']);
+		expect(applied).toEqual(MIGRATION_FILES);
 	});
 
 	it('runs twice without harm: the second run applies nothing and changes nothing', async () => {
@@ -59,7 +63,29 @@ describe('runMigrations', () => {
 		expect(secondRun).toEqual([]);
 		expect(await tableNames()).toEqual(before);
 		const { rows } = await pool.query('SELECT filename FROM schema_migrations ORDER BY filename');
-		expect(rows).toEqual([{ filename: '001_initial.sql' }, { filename: '002_night.sql' }]);
+		expect(rows).toEqual(MIGRATION_FILES.map((filename) => ({ filename })));
+	});
+
+	it('adds trait_cap and challenge_timeout_minutes to guild_settings', async () => {
+		await runMigrations(pool, MIGRATIONS_DIR);
+		await pool.query("INSERT INTO guild_settings (guild_id, trait_cap) VALUES ('g2', 30)");
+		const { rows } = await pool.query('SELECT trait_cap, challenge_timeout_minutes FROM guild_settings WHERE guild_id = $1', ['g2']);
+		expect(rows).toEqual([{ trait_cap: 30, challenge_timeout_minutes: 60 }]);
+	});
+
+	it('challenge_costs references a real challenge row', async () => {
+		await runMigrations(pool, MIGRATIONS_DIR);
+		await pool.query(
+			"INSERT INTO challenges (guild_id, channel_id, kind, status, challenger_discord_id, conditions, state) VALUES ('g1', 'c1', 'simple_test', 'throwing', 'u1', 'a quick test', '{}')"
+		);
+		const { rows: challengeRows } = await pool.query('SELECT id FROM challenges');
+		await pool.query('INSERT INTO challenge_costs (challenge_id, kind, payload) VALUES ($1, $2, $3)', [
+			challengeRows[0]!.id,
+			'wound',
+			'{}',
+		]);
+		const { rows } = await pool.query('SELECT challenge_id FROM challenge_costs');
+		expect(rows).toEqual([{ challenge_id: challengeRows[0]!.id }]);
 	});
 
 	it('adds open_session_id to guild_settings', async () => {

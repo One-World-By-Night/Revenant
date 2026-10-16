@@ -38,14 +38,28 @@ describe('languageChoiceToStoredLocale', () => {
 
 describe('formatSettingsSummary', () => {
 	it('renders every field, with a mention for a set staff channel', () => {
-		const summary = formatSettingsSummary('en-US', { poolRules: 'v20', staffChannelId: '123', storedLocale: 'pt-BR' });
+		const summary = formatSettingsSummary('en-US', {
+			poolRules: 'v20',
+			staffChannelId: '123',
+			storedLocale: 'pt-BR',
+			traitCap: 30,
+			challengeTimeoutMinutes: 45,
+		});
 		expect(summary).toContain('V20');
 		expect(summary).toContain('<#123>');
 		expect(summary).toContain('Portuguese (Brazil)');
+		expect(summary).toContain('30');
+		expect(summary).toContain('45');
 	});
 
-	it('shows "not set" for no staff channel', () => {
-		const summary = formatSettingsSummary('en-US', { poolRules: 'revised', staffChannelId: null, storedLocale: null });
-		expect(summary).toContain('not set');
+	it('shows "not set" for no staff channel or trait cap', () => {
+		const summary = formatSettingsSummary('en-US', {
+			poolRules: 'revised',
+			staffChannelId: null,
+			storedLocale: null,
+			traitCap: null,
+			challengeTimeoutMinutes: 60,
+		});
+		expect(summary.match(/not set/g)).toHaveLength(2);
 	});
 });
