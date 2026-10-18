@@ -30,6 +30,7 @@ import { downtimeCommand } from './downtime.js';
 import { sceneCommand } from './scene.js';
 import { plotCommand } from './plot.js';
 import { roomCommand } from './room.js';
+import { helpCommand } from './help.js';
 
 export interface CommandContext {
 	pool: Pool;
@@ -72,6 +73,7 @@ export const commands: BotCommand[] = [
 	sceneCommand,
 	plotCommand,
 	roomCommand,
+	helpCommand,
 ];
 
 /**
