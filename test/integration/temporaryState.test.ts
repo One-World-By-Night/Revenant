@@ -193,8 +193,7 @@ foreach ( [ 'it-temp-state-player', 'it-temp-state-hst' ] as $login ) {
 		const session = await findSessionForDate(connection, secret, HST_DISCORD_USER_ID, today);
 		expect(session).not.toBeNull();
 
-		// Attendance isn't one of step 2's own bot-reachable routes (BE's own /checkin is step 5's
-		// concern) - recorded directly, the same way the test's own setup is, not through the bot.
+		// Attendance has no bot-reachable route - recorded directly, the same way the test's own setup is.
 		writeFileSync(
 			ATTENDANCE_SCRIPT,
 			`<?php
