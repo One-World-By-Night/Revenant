@@ -109,6 +109,10 @@ export const testCommand = {
 		const beConnection: Connection = { be_connection_id: connection.be_connection_id, rest_root: connection.rest_root, game_slug: connection.game_slug };
 
 		const narrator = interaction.options.getUser('narrator', true);
+		if (narrator.id === interaction.user.id) {
+			await interaction.reply({ content: t(locale, 'challenge.cannotBeYourself'), flags: MessageFlags.Ephemeral });
+			return;
+		}
 		const conditions = interaction.options.getString('conditions', true);
 		const requireWin = interaction.options.getBoolean('require_win') ?? false;
 
@@ -182,7 +186,9 @@ export const testCommand = {
 			if (buttonInteraction.customId.startsWith(GESTURE_PREFIX)) {
 				const gesture = buttonInteraction.customId.slice(GESTURE_PREFIX.length) as Gesture;
 				if ((GESTURES as string[]).includes(gesture)) {
-					void handleThrow(buttonInteraction, gesture);
+					handleThrow(buttonInteraction, gesture).catch((error: unknown) => {
+						context.logger.error({ error: error instanceof Error ? error.message : String(error) }, 'test throw handling failed');
+					});
 				}
 			}
 		});

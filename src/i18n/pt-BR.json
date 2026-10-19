@@ -122,6 +122,7 @@
 	"notice.linkRequest": "**{username}** está esperando para ser vinculado - use `/links` para revisar.",
 	"notice.generic": "Algo aconteceu ({kind}).",
 	"challenge.noActiveCharacter": "Você não tem um personagem ativo. Rode `/character` primeiro.",
+	"challenge.cannotBeYourself": "Você não pode se indicar para isso - uma única conta do Discord só pode jogar como um dos dois lados.",
 	"challenge.opponentNoActiveCharacter": "{username} ainda não tem um personagem ativo vinculado.",
 	"challenge.termsModalTitle": "Declare os termos",
 	"challenge.fieldAppropriateTraits": "Traits apropriados",

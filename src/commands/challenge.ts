@@ -346,6 +346,11 @@ export async function runChallengeFlow(interaction: ChatInputCommandInteraction,
 	}
 	const guildId = interaction.guildId;
 
+	if (opponentUser.id === interaction.user.id) {
+		await interaction.reply({ content: t(locale, 'challenge.cannotBeYourself'), flags: MessageFlags.Ephemeral });
+		return;
+	}
+
 	const connection = await loadConnection(context, guildId);
 	if (!connection) {
 		await interaction.reply({ content: t(locale, 'disconnect.notConnected'), flags: MessageFlags.Ephemeral });
@@ -859,19 +864,23 @@ export async function runChallengeFlow(interaction: ChatInputCommandInteraction,
 			}
 		}
 
+		const onHandlerError = (error: unknown): void => {
+			context.logger.error({ error: error instanceof Error ? error.message : String(error) }, 'challenge button handling failed');
+		};
+
 		collector.on('collect', (buttonInteraction: ButtonInteraction) => {
 			if (buttonInteraction.customId === 'challenge:relent') {
-				void handleRelent(buttonInteraction);
+				handleRelent(buttonInteraction).catch(onHandlerError);
 			} else if (buttonInteraction.customId === 'challenge:dispute') {
-				void handleDispute(buttonInteraction);
+				handleDispute(buttonInteraction).catch(onHandlerError);
 			} else if (buttonInteraction.customId === 'challenge:claim') {
-				void handleClaim(buttonInteraction);
+				handleClaim(buttonInteraction).catch(onHandlerError);
 			} else if (buttonInteraction.customId === NEGATIVE_TRAIT_CALL_ID) {
-				void handleNegativeTraitCall(buttonInteraction);
+				handleNegativeTraitCall(buttonInteraction).catch(onHandlerError);
 			} else if (buttonInteraction.customId.startsWith('challenge:throw:')) {
 				const gesture = buttonInteraction.customId.slice('challenge:throw:'.length) as Gesture;
 				if (GESTURES.includes(gesture)) {
-					void handleThrow(buttonInteraction, gesture);
+					handleThrow(buttonInteraction, gesture).catch(onHandlerError);
 				}
 			}
 		});

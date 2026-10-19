@@ -122,6 +122,7 @@
 	"notice.linkRequest": "**{username}** is waiting to be linked - use `/links` to review it.",
 	"notice.generic": "Something happened ({kind}).",
 	"challenge.noActiveCharacter": "You have no active character. Run `/character` first.",
+	"challenge.cannotBeYourself": "You can't name yourself for this - a single Discord account can only ever throw as one side.",
 	"challenge.opponentNoActiveCharacter": "{username} has no linked active character yet.",
 	"challenge.termsModalTitle": "State the terms",
 	"challenge.fieldAppropriateTraits": "Appropriate Traits",
