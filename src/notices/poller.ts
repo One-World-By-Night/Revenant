@@ -12,7 +12,7 @@ import type { Connection } from '../be/temporaryState.js';
 
 const DEFAULT_POLL_SECONDS = 30;
 
-interface ConnectionRow {
+export interface ConnectionRow {
 	guild_id: string;
 	be_connection_id: number;
 	secret_enc: Buffer;
@@ -38,7 +38,27 @@ async function deliverDm(client: Client, discordUserId: string, text: string): P
 	return true;
 }
 
-async function pollGuild(client: Client, pool: Pool, config: Config, logger: Logger, row: ConnectionRow): Promise<void> {
+/**
+ * Records one notice as posted for a guild, before it is sent. True when this call recorded it; false when it was
+ * recorded already, so it is never posted a second time.
+ */
+export async function claimNotice(pool: Pool, guildId: string, noticeId: number): Promise<boolean> {
+	const { rowCount } = await pool.query(
+		'INSERT INTO delivered_notices (guild_id, notice_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+		[guildId, noticeId]
+	);
+	return rowCount === 1;
+}
+
+/**
+ * Guilds with a poll still running.
+ */
+const inFlight = new Set<string>();
+
+/**
+ * Reads one guild's undelivered notices, posts each one not posted before, and acknowledges them all.
+ */
+export async function pollGuild(client: Client, pool: Pool, config: Config, logger: Logger, row: ConnectionRow): Promise<void> {
 	const secret = decrypt(row.secret_enc, config.secretKey);
 	const connection: Connection = { be_connection_id: row.be_connection_id, rest_root: row.rest_root, game_slug: row.game_slug };
 
@@ -57,6 +77,10 @@ async function pollGuild(client: Client, pool: Pool, config: Config, logger: Log
 
 	const delivered: number[] = [];
 	for (const notice of notices) {
+		delivered.push(notice.id);
+		if (!(await claimNotice(pool, row.guild_id, notice.id))) {
+			continue;
+		}
 		const destination = resolveDestination(notice, links);
 		const text = formatNotice(locale, notice);
 		try {
@@ -75,9 +99,6 @@ async function pollGuild(client: Client, pool: Pool, config: Config, logger: Log
 				'failed to deliver a notice'
 			);
 		}
-		// Acknowledged either way - a delivery failure (a deleted room, a closed DM, no staff channel
-		// configured) should not hold the same notice forever.
-		delivered.push(notice.id);
 	}
 
 	await ackNotices(connection, secret, delivered);
@@ -95,6 +116,10 @@ export function startNoticePoller(client: Client, pool: Pool, config: Config, lo
 			.query<ConnectionRow>('SELECT guild_id, be_connection_id, secret_enc, rest_root, game_slug FROM connections')
 			.then(async ({ rows }) => {
 				for (const row of rows) {
+					if (inFlight.has(row.guild_id)) {
+						continue;
+					}
+					inFlight.add(row.guild_id);
 					try {
 						await pollGuild(client, pool, config, logger, row);
 					} catch (error) {
@@ -102,6 +127,8 @@ export function startNoticePoller(client: Client, pool: Pool, config: Config, lo
 							{ guildId: row.guild_id, error: error instanceof Error ? error.message : String(error) },
 							'notice poll failed for this guild'
 						);
+					} finally {
+						inFlight.delete(row.guild_id);
 					}
 				}
 			})

@@ -45,6 +45,12 @@ interface WpErrorBody {
 	data?: { status?: number };
 }
 
+/**
+ * The query key every signed GET carries a fresh random value under, so no cache between the bot and BE can
+ * answer it with a stored copy.
+ */
+export const CACHE_BUSTER = 'nocache';
+
 function appendQuery(url: string, query: string): string {
 	if (query === '') {
 		return url;
@@ -57,7 +63,9 @@ async function doFetch(
 	options: BeCallOptions,
 	fetchImpl: typeof fetch
 ): Promise<Response> {
-	const query = options.query ?? {};
+	const nonce = options.signedAs ? generateNonce() : '';
+	const query =
+		options.signedAs && options.method === 'GET' ? { ...(options.query ?? {}), [CACHE_BUSTER]: nonce } : (options.query ?? {});
 	const canonicalQueryString = canonicalQuery(query);
 	const url = appendQuery(buildRouteUrl(restRoot, options.route), canonicalQueryString);
 	const bodyString = options.body === undefined ? '' : JSON.stringify(options.body);
@@ -69,7 +77,6 @@ async function doFetch(
 
 	if (options.signedAs) {
 		const timestamp = Math.floor(Date.now() / 1000).toString();
-		const nonce = generateNonce();
 		const discordUserId = options.signedAs.discordUserId ?? '';
 		const canonical = canonicalString({
 			method: options.method,

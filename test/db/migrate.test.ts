@@ -35,6 +35,7 @@ describe('runMigrations', () => {
 			'challenges',
 			'channel_webhooks',
 			'connections',
+			'delivered_notices',
 			'dice_log',
 			'guild_settings',
 			'posting_locks',
@@ -52,6 +53,7 @@ describe('runMigrations', () => {
 		'004_challenge_settings.sql',
 		'005_posting.sql',
 		'006_rooms.sql',
+		'007_delivered_notices.sql',
 	];
 
 	it('records every applied migration', async () => {

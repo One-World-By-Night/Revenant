@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
-import { callBe } from '../../src/be/client.js';
+import { callBe, CACHE_BUSTER } from '../../src/be/client.js';
+import { canonicalString, sign } from '../../src/be/signing.js';
 
 const REST_ROOT = 'https://example.test/wp-json/';
 const SECRET = Buffer.alloc(32, 9);
@@ -65,7 +66,67 @@ describe('callBe: a signed call', () => {
 			},
 			fetchImpl
 		);
-		expect(seenUrl).toBe('https://example.test/wp-json/be/v1/kony/characters?page=2&search=a%20b');
+		expect(seenUrl).toMatch(/^https:\/\/example\.test\/wp-json\/be\/v1\/kony\/characters\?nocache=[A-Za-z0-9_-]+&page=2&search=a%20b$/);
+	});
+
+	it('puts a fresh cache-busting value on every signed GET, inside what it signs', async () => {
+		const seen: { url: string; headers: Record<string, string> }[] = [];
+		const fetchImpl = vi.fn(async (url: string, init) => {
+			seen.push({ url, headers: init.headers as Record<string, string> });
+			return jsonResponse(200, []);
+		}) as unknown as typeof fetch;
+
+		const options = { method: 'GET' as const, route: '/be/v1/kony/bot/notices', signedAs: { connectionId: '7', secret: SECRET } };
+		await callBe(REST_ROOT, options, fetchImpl);
+		await callBe(REST_ROOT, options, fetchImpl);
+
+		const values = seen.map(({ url }) => new URL(url).searchParams.get(CACHE_BUSTER));
+		expect(values[0]).toMatch(/^[A-Za-z0-9_-]{16,64}$/);
+		expect(values[1]).toMatch(/^[A-Za-z0-9_-]{16,64}$/);
+		expect(values[0]).not.toBe(values[1]);
+
+		for (const { url, headers } of seen) {
+			const canonical = canonicalString({
+				method: 'GET',
+				route: '/be/v1/kony/bot/notices',
+				query: { [CACHE_BUSTER]: new URL(url).searchParams.get(CACHE_BUSTER) ?? '' },
+				timestamp: headers['X-BE-Bot-Timestamp'] ?? '',
+				nonce: headers['X-BE-Bot-Nonce'] ?? '',
+				connectionId: '7',
+				discordUserId: '',
+				body: '',
+			});
+			expect(headers['X-BE-Bot-Signature']).toBe(sign(canonical, SECRET));
+		}
+	});
+
+	it('gives a retried GET a new cache-busting value', async () => {
+		const urls: string[] = [];
+		const fetchImpl = vi.fn(async (url: string) => {
+			urls.push(url);
+			if (urls.length === 1) {
+				throw new Error('ECONNRESET');
+			}
+			return jsonResponse(200, []);
+		}) as unknown as typeof fetch;
+
+		await callBe(REST_ROOT, { method: 'GET', route: '/be/v1/kony/bot/notices', signedAs: { connectionId: '7', secret: SECRET } }, fetchImpl);
+
+		expect(urls).toHaveLength(2);
+		expect(urls[0]).not.toBe(urls[1]);
+	});
+
+	it('puts no cache-busting value on a signed write or an unsigned call', async () => {
+		const urls: string[] = [];
+		const fetchImpl = vi.fn(async (url: string) => {
+			urls.push(url);
+			return jsonResponse(200, {});
+		}) as unknown as typeof fetch;
+
+		await callBe(REST_ROOT, { method: 'POST', route: '/be/v1/kony/bot/notices/ack', body: { ids: [1] }, signedAs: { connectionId: '7', secret: SECRET } }, fetchImpl);
+		await callBe(REST_ROOT, { method: 'GET', route: '/be/v1/kony/bot/status' }, fetchImpl);
+
+		expect(urls).toEqual(['https://example.test/wp-json/be/v1/kony/bot/notices/ack', 'https://example.test/wp-json/be/v1/kony/bot/status']);
 	});
 
 	it('serializes the body once and sets Content-Type', async () => {
