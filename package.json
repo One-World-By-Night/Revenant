@@ -20,12 +20,12 @@
   },
   "dependencies": {
     "discord.js": "14.27.0",
-    "pg": "8.13.1",
+    "pg": "8.23.1",
     "pino": "9.5.0"
   },
   "devDependencies": {
     "@types/node": "22.20.5",
-    "@types/pg": "8.11.10",
+    "@types/pg": "8.23.1",
     "@typescript-eslint/eslint-plugin": "8.71.2",
     "@typescript-eslint/parser": "8.71.2",
     "eslint": "10.12.0",
