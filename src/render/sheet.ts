@@ -167,15 +167,36 @@ export function buildSingleSectionEmbed(doc: SheetDocument, sectionTitle: string
 }
 
 /**
- * Splits a full embed list into pages of at most `pageSize` embeds, Discord's own per-message limit.
+ * The characters of an embed that Discord counts against a message's 6,000 character limit: its title,
+ * description, footer, author name and every field's name and value.
+ */
+export function embedLength(embed: APIEmbed): number {
+	const fields = (embed.fields ?? []).reduce((sum, field) => sum + field.name.length + field.value.length, 0);
+	return (embed.title?.length ?? 0) + (embed.description?.length ?? 0) + (embed.footer?.text.length ?? 0) + (embed.author?.name.length ?? 0) + fields;
+}
+
+/**
+ * Splits a full embed list into pages for one message each: at most `pageSize` embeds, and at most 6,000
+ * characters of embed text across the page, since Discord refuses a message past either. An embed over the
+ * text limit on its own still gets a page of its own, in order.
  */
 export function paginateEmbeds(embeds: APIEmbed[], pageSize: number = MAX_EMBEDS_PER_PAGE): APIEmbed[][] {
 	if (embeds.length === 0) {
 		return [[]];
 	}
 	const pages: APIEmbed[][] = [];
-	for (let i = 0; i < embeds.length; i += pageSize) {
-		pages.push(embeds.slice(i, i + pageSize));
+	let page: APIEmbed[] = [];
+	let pageLength = 0;
+	for (const embed of embeds) {
+		const length = embedLength(embed);
+		if (page.length > 0 && (page.length >= pageSize || pageLength + length > MAX_EMBED_TOTAL)) {
+			pages.push(page);
+			page = [];
+			pageLength = 0;
+		}
+		page.push(embed);
+		pageLength += length;
 	}
+	pages.push(page);
 	return pages;
 }
