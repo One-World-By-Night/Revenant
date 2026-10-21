@@ -2,6 +2,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { describe, it, expect } from 'vitest';
+import type { APIEmbed } from 'discord.js';
 import {
 	buildSheetEmbeds,
 	buildSingleSectionEmbed,
@@ -156,6 +157,61 @@ describe('paginateEmbeds', () => {
 		expect(pages).toHaveLength(2);
 		expect(pages[0]).toHaveLength(10);
 		expect(pages[1]).toHaveLength(3);
+	});
+});
+
+describe('paginateEmbeds against Discord\'s per-message text limit', () => {
+	// Discord counts the text of every embed in one message against a single 6,000 character limit.
+	function messageLength(page: APIEmbed[]): number {
+		return page.reduce(
+			(total, embed) =>
+				total +
+				(embed.title?.length ?? 0) +
+				(embed.description?.length ?? 0) +
+				(embed.footer?.text.length ?? 0) +
+				(embed.author?.name.length ?? 0) +
+				(embed.fields ?? []).reduce((sum, field) => sum + field.name.length + field.value.length, 0),
+			0,
+		);
+	}
+
+	function bigSheet(sectionCount: number): SheetDocument {
+		return {
+			title: 'A Large Character',
+			subtitle: 'Vampire, Sabbat',
+			header: [['Clan', 'Tzimisce'], ['Sect', 'Sabbat'], ['Generation', '8']],
+			sections: Array.from({ length: sectionCount }, (_, i) => ({
+				title: `Section ${i + 1}`,
+				rows: Array.from({ length: 22 }, (_, r) => `Trait number ${r + 1} of section ${i + 1} x${(r % 5) + 1}`),
+			})) as SheetSection[],
+		};
+	}
+
+	it('keeps every page of a large sheet under 6,000 characters in total', () => {
+		const embeds = buildSheetEmbeds(bigSheet(60), { accentColor: null, footerText: 'Chronicle' });
+		const pages = paginateEmbeds(embeds);
+		expect(pages.length).toBeGreaterThan(3);
+		for (const page of pages) {
+			expect(messageLength(page)).toBeLessThanOrEqual(6000);
+			expect(page.length).toBeLessThanOrEqual(10);
+		}
+	});
+
+	it('splits a sheet of two 4,000 character embeds into two pages', () => {
+		const embed = (): APIEmbed => ({ fields: Array.from({ length: 4 }, (_, i) => ({ name: `n${i}`, value: 'x'.repeat(998) })) });
+		const pages = paginateEmbeds([embed(), embed()]);
+		expect(pages).toHaveLength(2);
+		expect(pages.every((page) => messageLength(page) <= 6000)).toBe(true);
+	});
+
+	it('loses and reorders nothing across the pages', () => {
+		const embeds = buildSheetEmbeds(bigSheet(60), { accentColor: null, footerText: 'Chronicle' });
+		expect(paginateEmbeds(embeds).flat()).toEqual(embeds);
+	});
+
+	it('still fills a page to ten embeds when they are small', () => {
+		const pages = paginateEmbeds(Array.from({ length: 25 }, () => ({ fields: [{ name: 'a', value: 'b' }] })));
+		expect(pages.map((page) => page.length)).toEqual([10, 10, 5]);
 	});
 });
 
